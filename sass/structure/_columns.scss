@@ -1,0 +1,44 @@
+.cols {
+	
+	clear: left;
+	
+	@include bp-small() {
+		.col {
+			width: 50%;
+			float: left;
+		}
+	}
+	
+	.col {
+		.cols {
+			.col {
+				width: 50%;
+				float: left;
+			}
+		}
+	}
+	
+	&.col-1-4 {
+		.col {
+			width: 50%;
+			float: left;
+			&:nth-child(8n+3) {
+				float: right;
+			}
+			&:nth-child(8n+5) {
+				float: right;
+			}
+		}
+		@include bp-small() {
+			.col {
+				width: 25%;
+				float: left;
+				&:nth-child(8n+3),
+				&:nth-child(8n+5) {
+					float: left;
+				}
+			}
+		}
+	}
+
+}

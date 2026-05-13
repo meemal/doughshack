@@ -1,0 +1,27 @@
+// Borders
+$border__width-site: 1px;
+$border__width-input: 1px;
+$border__width-button: 0;
+
+$border__radius-site: 0;
+$border__radius-input: 0;
+$border__radius-button: 0;
+
+// Animations
+$transition__color: color 0.5s ease;
+$transition__background: background 0.5s ease;
+$transition__opacity: opacity 0.5s ease;
+$transition__scale: scale 0.5s ease;
+$transition__transform: transform 0.5s ease;
+$transition__all: all 0.5s ease;
+$transition__all_fast: all 0.25s ease;
+
+// Shadows
+$shadow__box: 0 0 2px $color__tone-80;
+$shadow__box-offset: 1px 1px 6px #000;
+
+//0 0 2px $color__tone-80
+
+$shadow__box-inset: inset 0 1px 0 rgba(255, 255, 255, 0.5), inset 0 15px 17px rgba(255, 255, 255, 0.5), inset 0 -5px 12px rgba(0, 0, 0, 0.05);
+$shadow__box-inset-hover: inset 0 1px 0 rgba(255, 255, 255, 0.8), inset 0 15px 17px rgba(255, 255, 255, 0.8), inset 0 -5px 12px rgba(0, 0, 0, 0.02);
+$shadow__box-inset-focus: inset 0 1px 0 rgba(255, 255, 255, 0.8), inset 0 15px 17px rgba(255, 255, 255, 0.8), inset 0 -5px 12px rgba(0, 0, 0, 0.02);

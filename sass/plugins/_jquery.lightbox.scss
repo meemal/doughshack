@@ -1,0 +1,51 @@
+#lightbox {
+    position:fixed; /* keeps the lightbox window in the current viewport */
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+	background: #000;
+	background: rgba(0,0,0,.85);
+    overflow: hidden;
+    z-index: 999999;
+	.events-prev,
+	.events-next  {
+		display: none;
+	}
+	.simcal-event-details {
+		padding-left: $spacing__small;
+		padding-bottom: $spacing__small;
+		padding-right: 65px;
+	}
+	.simcal-event-start-date {
+		display: none;
+	}
+	.simcal-event-details p:first-of-type {
+		width: 100%;
+		float: none;
+		margin-left: 0;
+		padding-bottom: 0;
+		padding-left: 0;
+	}
+	h3 {
+		padding-top: $spacing__smallest;
+	}
+	h4 {
+		display: none;
+	}
+}
+.lightbox-close {
+	position: absolute;
+    right: 0;
+	color: #fff;
+	font-family: $font__headings;
+	padding: ($spacing__medium - 0.3em) $spacing__medium;
+	@include font-size($font__size-small);
+	@include bp-nav-switch() {
+		@include font-size($font__size-big);
+	}
+	&:hover,
+	&:focus {
+		cursor: pointer;   
+	}
+}

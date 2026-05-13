@@ -1,0 +1,34 @@
+// Site Widths
+$size__site-main: 100%;
+$size__site-sidebar: 32.1833333%;
+$size__site-sidebar-wide: 32.1833333%;
+
+// Site Content Widths
+$size__content-max-width: 75em;
+$size__content-max-width-narrow: 64em;
+$size__content-max-width-narrower: 46em;
+
+// Gutter Widths
+$size__site-gutters: 1.725%;
+
+// Spacing
+$spacing__smallest: 0.2em;
+$spacing__smaller: 0.5em;
+$spacing__small: 0.8075em;
+$spacing__medium: 1.4375em;
+$spacing__large: 2em;
+$spacing__larger: 2.6em;
+$spacing__largest: 4em;
+$spacing__forms-input-padding: $spacing__smaller;
+$spacing__forms-button-padding: $spacing__small $spacing__medium;
+
+// Misc
+//$header__height-mobile: 0;
+//$header__height: 0;
+//$header__height-outer: 0;
+//$features__max-height: 650px; // Full-width images, maximum height
+$features__padding-ratio: 40%; // Full-width images, responsive aspect ratio via padding-bottom
+$features__padding-ratio-wide: 46%; // Full-width images, responsive aspect ratio via padding-bottom
+$features__padding-ratio-wider: 60%; // Full-width images, responsive aspect ratio via padding-bottom
+$features__padding-ratio-narrow: 26%; // Full-width images, responsive aspect ratio via padding-bottom
+$features__padding-ratio-narrow-wide: 30%; // Full-width images, responsive aspect ratio via padding-bottom

@@ -1,0 +1,208 @@
+/* Parallax */
+.parallax {
+	background-position: center top;
+	.js & {
+		-webkit-transform: translate3d(0, 0, 0);
+	}
+	.no-js & {
+		background-attachment: fixed;
+		background-position: center center;
+	}
+}
+
+
+/* Image Captions */
+.image-caption {
+	background: rgba($color__tone-100,0.75);
+	color: #fff;
+	padding: $spacing__smaller $spacing__small;
+	@include font-size($font__size-big);
+	line-height: $font__line-height-tight;
+	max-width: 75%;
+	position: absolute;
+	right: 0;
+	bottom: $spacing__larger;
+	margin: 0;
+}
+
+
+/* Inline Menus */
+.inline-menu {
+	padding: 0;
+	list-style: none;
+	text-align: center;
+	line-height: 1;
+	
+	li {
+		display: inline-block;
+		a {
+			margin-right: $spacing__smallest;
+			padding-right: $spacing__smaller;
+			border-right: solid 1px $color__tone-10;
+			display: inline-block;
+		}
+		&:last-child {
+			a {
+				border: 0;
+				padding-right: 0;
+			}
+		}
+	}
+}
+
+
+/* Social Links */
+.social-links {
+	padding: 0;
+	list-style: none;
+	li {
+		display: inline-block;
+		a {
+			display: block;
+			position: relative;
+			width: 5.4em;
+			height: 5.4em;
+			&:before {
+				content: "";
+				position: absolute;
+				top: 0;
+				right: 0;
+				bottom: 0;
+				left: 0;
+				background-image: url(img/sprite-b-1.png);
+				background-size: 200% auto;
+				background-position: 0 26.83%;
+			}
+			&:hover,
+			&:focus {
+				&:before {
+					background-position: 0 24.4%;
+				}
+				&:after {
+				    transform: rotate(-8deg);
+				}
+			}
+			&:after {
+				content: "";
+				position: absolute;
+				top: 1.4em;
+				right: 1.4em;
+				bottom: 1.4em;
+				left: 1.4em;
+				background-image: url(img/sprite-b-1.png);
+				background-size: 200% auto;
+				background-position: 0 19.5%;
+			}
+		}
+		&.social-links-facebook a {
+			&:after {
+				background-position: -100% 22%;
+			}
+		}
+		&.social-links-instagram a {
+			&:after {
+				background-position: 0 22%;
+			}
+		}
+	}
+	&.inverted {
+		li {
+			a {
+				&:hover,
+				&:focus {
+					&:before {
+						background-position: 100% 24.4%;
+					}
+				}
+			}
+		}
+	}
+}
+
+
+/* Quotes */
+figure.quote {
+	$var__quote-size: 6em;
+	margin: 0 $spacing__smaller $spacing__larger $spacing__smaller;
+	
+	blockquote {
+		margin: 0 0 $spacing__small 0;
+		@include font-size($font__size-bigger);
+		&:before {
+			width: $var__quote-size;
+			height: $var__quote-size/2;
+			content: "";
+			display: inline-block;
+			z-index: 1;
+			background-image: url(img/sprite-b-1.png);
+			background-size: 200% auto;
+			background-position: 100% 62.65%;
+			margin: $spacing__smallest $spacing__smallest (-$spacing__smallest) (-$spacing__large);
+		}
+	}
+	figcaption {
+		font-weight: $font__weight-bold;
+		text-align: right;
+		max-width: 80%;
+		margin-left: auto;
+		cite {
+			font-family: $font__headings;
+		    @include font-size($font__size-h2);
+		    font-style: normal;
+			font-weight: $font__weight-normal;
+			line-height: 1;
+		}
+	}
+}
+
+/* Buttons */
+.with-button {
+	position: relative;
+	margin-top: $spacing__largest;
+}
+.charity-button {
+	max-width: 12.6em;
+	background: transparent url(img/speech-bubble-2.png);
+	background-size: 100% 100%;
+	padding: $spacing__medium $spacing__large $spacing__medium $spacing__largest;
+	text-align: center;
+	line-height: 1.3;
+	@include bp-small() {
+		@include font-size($font__size-big);
+	}
+	@include bp-medium() {
+		@include font-size($font__size-h5);
+	}
+	@include bp-large() {
+		@include font-size($font__size-h4);
+	}
+}
+
+/* Section Titles (Speech Bubble) */
+.with-section-title {
+	text-align: center;
+	.section-title {
+		background: url(img/speech-bubble.png) no-repeat;
+		background-size: 100% 100%;
+		@include font-size($font__size-h5);
+		color: inherit;
+		font-family: inherit;
+		font-weight: $font__weight-bold;
+	    max-width: 15em;
+	    display: inline-block;
+	    padding: $spacing__large $spacing__large $spacing__largest $spacing__medium;
+		strong {
+			display: block;
+			@include font-size($font__size-h2);
+			font-family: $font__headings;
+			margin: 0.1em 0 0.15em 0;
+			line-height: 1;
+		}
+		@include bp-large() {
+			@include font-size($font__size-h4);
+			strong {
+				@include font-size(3.6);
+			}
+		}
+	}
+}

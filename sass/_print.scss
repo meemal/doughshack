@@ -1,0 +1,68 @@
+@media print {
+	.home {
+		#page {
+			
+			.page-intro { 
+				.section-inner {
+					position: static;
+				}
+				.feature-slider {
+					display: none;
+				}
+			}
+			
+			.feature-find-us {
+				background: transparent;
+				color: $color__tone-80;
+				border: 0;
+				* {
+					background: transparent;
+					color: $color__tone-80;
+				}
+				.show-weekly-events {
+					display: block;
+				}
+				.events-show, 
+				.events-show + .find-us-title {
+					display: none;
+				}
+				.map-canvas-container #map-canvas {
+					max-height: 25em;
+				}
+			}
+			.feature-find-us .section-inner .follow-us .follow-us-hire:before {
+				display: none;
+			}
+			.feature-slider {
+				//overflow: hidden;
+				//max-height: 10em;
+				display: none;
+			}
+			.link-email,
+			.link-telephone:before {
+				display: none;
+			}
+		}
+	}
+	#page {
+		.page-intro {
+			.feature-parallax-image {
+				display: none;
+			}
+		}
+		.feature-alternating-grid .cols {
+			border: 0;
+			.col.with-bg-image,
+			h2:before {
+				display: none;
+			}
+		}
+		.feature-slider.feature-slider-single .feature-slider-image {
+			padding-bottom: 28%;
+		}
+		.site-footer .back-to-top,
+		.site-footer .social-links {
+			display: none;
+		}
+	}
+}

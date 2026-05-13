@@ -1,0 +1,156 @@
+/* Web Fonts */
+@font-face {
+    font-family: 'hanken';
+    src: url('fonts/hanken-book-webfont.woff2') format('woff2'),
+         url('fonts/hanken-book-webfont.woff') format('woff');
+    font-weight: bold;
+    font-style: bold;
+}
+@font-face {
+    font-family: 'hanken';
+    src: url('fonts/hanken-light-webfont.woff2') format('woff2'),
+         url('fonts/hanken-light-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* Web Fonts - Graceful loading */
+//.site-header .site-title,
+.site-header .menu-main-menu-container,
+.page-id-2 .page-intro .section-inner,
+h1,
+.find-us-title h2 {
+	opacity: 1;
+	transform: translateY(0);
+	transition: transform .4s ease-in-out, opacity .4s ease-in-out;
+}
+//.wf-loading .site-header .site-title,
+.wf-loading .site-header .menu-main-menu-container,
+.wf-loading .page-id-2 .page-intro .section-inner,
+.wf-loading h1,
+.wf-loading .find-us-title h2  {
+	opacity: 0;
+}
+//.wf-loading .site-header .site-title,
+.wf-loading .site-header .menu-main-menu-container
+.wf-loading .page-id-2 .page-intro .section-inner, {
+	transform: translateY(-20px);
+}
+
+body,
+button,
+input,
+select,
+textarea {
+	color: $color__text-body;
+	font-family: $font__main;
+	font-weight: $font__weight-normal;
+	line-height: $font__line-height-body;
+
+}
+
+body {
+	
+	@include font-size($font__size-smaller);
+
+	@include bp-medium {
+		
+		@include font-size($font__size-body);
+		
+	}
+	
+	h1, h2, h3, h4, h5, h6, strong {
+		/* Better (Lighter) Font Rendering */
+	    -webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+	}
+	
+	button,
+	input,
+	select,
+	textarea {
+		
+		@include font-size($font__size-body);
+		
+	}
+	
+}
+
+em {
+	border-bottom: dashed 1px;
+	font-style: normal;
+}
+
+strong {
+	font-weight: $font__weight-bold;
+	p & {
+		font-family: $font__headings;
+		font-size: 1.1em;
+		line-height: 1;
+		.js.wf-active & {
+			font-size: 1.2em;
+			line-height: 0.8;
+		}
+		em {
+			border: 0;
+			font-size: 1.2em;
+			.js.wf-active & {
+				font-size: 1.4em;
+			}
+		}
+	}
+}
+
+
+h1, h2, h3, h4, h5, h6 {
+	font-weight: $font__weight-normal;
+	font-family: $font__headings;
+}
+
+h1 {
+	line-height: 1;
+	margin-bottom: $spacing__smaller;
+	@include font-size($font__size-h2);
+	@include bp-small {
+		@include font-size($font__size-h1);
+	}
+	@include bp-medium {
+		@include font-size(4);
+	}
+	@include bp-full {
+		@include font-size(5);
+	}
+}
+
+h2 {
+	line-height: $font__line-height-tight;
+	margin-bottom: $spacing__smaller;
+	@include font-size($font__size-h3);
+	@include bp-medium {
+		@include font-size($font__size-h2);
+	}
+}
+
+h3 {
+	line-height: $font__line-height-tight;
+	margin-bottom: $spacing__small;
+	@include font-size($font__size-h4);
+	@include bp-medium {
+		@include font-size($font__size-h3);
+	}
+}
+
+h4 {
+	@include font-size($font__size-h4);
+	margin-bottom: $spacing__small;
+}
+
+h5 {
+	@include font-size($font__size-h5);
+	margin-bottom: $spacing__medium;
+}
+
+h6 {
+	@include font-size($font__size-h6);
+	margin-bottom: $spacing__medium;
+}

@@ -1,0 +1,26 @@
+table {
+	/* Table cellspacing */
+	border-collapse: separate;
+	border-spacing: 2px;
+
+	tr {
+		background: $color__tone-20;
+
+		&:nth-child(2n) {
+			background: $color__tone-40;
+		}
+
+		td,
+		th {
+			padding: $spacing__smallest $spacing__small;
+			text-align: left;
+			font-weight: 100;
+		}
+		
+		th {
+			background: $color__brand-1;
+			color: #fff;
+		}
+
+	}
+}

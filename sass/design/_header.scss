@@ -1,0 +1,74 @@
+$logo-size: 4.4em;
+.section.site-header {
+	background: #fff;
+	@include font-size($font__size-h5);
+	@include bp-mobile-landscape() {
+		@include font-size($font__size-h4);
+	}
+	@include bp-small() {
+		@include font-size($font__size-h3);
+	}
+	@include bp-medium() {
+		@include font-size($font__size-h2);
+	}
+	@include bp-desktop() {
+		@include font-size($font__size-h1);
+	}
+	.no-js & {
+		@include font-size($font__size-small);
+		@include bp-mobile-landscape() {
+			@include font-size($font__size-h4);
+		}
+		@include bp-small() {
+			@include font-size($font__size-h3);
+		}
+		@include bp-medium() {
+			@include font-size($font__size-h2);
+		}
+		@include bp-desktop() {
+			@include font-size($font__size-h1);
+		}
+	}
+	.section-inner {
+		padding: 0;
+	}
+	.site-branding {
+		position: absolute;
+		top: 1%;
+		left: 3%;
+		@include bp-mobile-landscape() {
+			left: 5%;
+		}
+		@include bp-large() {
+			left: 10%;
+		}
+		@include bp-desktop() {
+			left: 15%;
+		}
+		.site-title {
+			background: #fff url(img/logo.svg) no-repeat;
+			background-size: 100%;
+			width: $logo-size;
+		    border-radius: 50%;
+			border: solid #fff ($logo-size / 28);
+			//margin: 0 0 0 2%;
+			position: relative;
+			//margin: 0 auto;
+			z-index: 99;
+			@include bp-mobile-landscape() {
+				//margin: 0 0 0 5%;
+			}
+			@include bp-large() {
+				//margin: 0 0 0 10%;
+			}
+			@include bp-desktop() {
+				//margin: 0 0 0 15%;
+			}
+			
+			a {
+				padding-bottom: 106%;
+				display: block;
+			}
+		}
+	}
+}

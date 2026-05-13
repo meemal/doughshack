@@ -1,0 +1,45 @@
+// Tones
+$color__tone-0: #fff; // White
+$color__tone-100: #000; // Black
+$color__tone-5: mix($color__tone-100, white, 5%);
+$color__tone-10: mix($color__tone-100, white, 10%);
+$color__tone-20: mix($color__tone-100, white, 20%);
+$color__tone-40: #9DA490; // Green 2
+$color__tone-60: #6F7160; // Green 3
+$color__tone-80: #45423F; // Warm Grey
+
+// Brand Colour 1 (Dull Lime Green)
+$color__brand-1: #C6DB90; // Green 1
+$color__brand-1-light: #e3edca; // Green 1
+$color__brand-1-bright: saturate($color__brand-1, 50%);
+$color__brand-1-bright-mid: mix($color__brand-1-bright, #fff, 90%);
+$color__brand-1-bright-light: mix($color__brand-1-bright, #fff, 75%);
+$color__brand-1-bright-dark: mix($color__brand-1-bright, $color__tone-80, 65%);
+$color__brand-1-bright-darker: mix($color__brand-1-bright-dark, $color__tone-80, 50%);
+
+// Brand Colour 2 (Pizza Red)
+$color__brand-2: #a52020; // alt to try: #ba1a2a
+$color__brand-2-bright: saturate($color__brand-2, 50%);
+$color__brand-2-bright-dark: mix($color__brand-2-bright, black, 80%);
+
+// Text
+$color__text-body: $color__tone-80;
+$color__text-input: $color__text-body;
+$color__text-input-placeholder: lighten($color__text-body, 40%);
+
+// Links
+$color__link: $color__brand-1-bright-dark;
+$color__link-visited: $color__brand-1-bright-dark;
+$color__link-hover: $color__brand-1-bright-darker;
+
+// Notices
+$color__background-success: $color__brand-1;
+$color__background-notice: $color__tone-20;
+$color__background-error: mix(red, white, 80%);
+
+// 3rd Party
+$color__twitter: #1da1f2;
+$color__facebook: #3b5998;
+$color__youtube: #cd201f;
+$color__linkedin: #0077b5;
+$color__instagram: #fb3958;

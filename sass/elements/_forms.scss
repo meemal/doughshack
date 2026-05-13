@@ -1,0 +1,112 @@
+button,
+input[type="button"],
+input[type="reset"],
+input[type="submit"],
+.btn,
+.btn:visited {
+	border-radius: $border__radius-button;
+	border: $border__width-button solid;
+	border-color: $color__link;
+	background: $color__link;
+	color: $color__text-body;
+	@include font-size(1);
+	text-decoration: none;
+	font-weight: $font__weight-bold;
+	line-height: 1.2;
+	padding: $spacing__forms-button-padding;
+	text-shadow: 0;
+	transition: $transition__all_fast;
+	display: inline-block;
+	text-align: center;
+
+	+ button,
+	+ input[type="button"],
+	+ input[type="reset"],
+	+ input[type="submit"],
+	+ .btn,
+	+ .btn:visited {
+		margin-left: $spacing__small;
+	}
+
+	&:hover,
+	&:focus,
+	&:active {
+		border-color: $color__link-hover;
+		background: $color__link-hover;
+		outline: none;
+	}
+
+}
+
+form {
+	margin-bottom: $spacing__large;
+	width: 100%;
+	
+	legend {
+		width: 100%;
+	}
+	fieldset {
+		
+		border: none;
+		padding: 0;
+		margin: 0;
+
+	}
+}
+
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="url"],
+input[type="password"],
+input[type="search"],
+textarea,
+select {
+	color: $color__text-input;
+	border: $border__width-input solid $color__text-input;
+	border-radius: $border__radius-input;
+	margin-bottom: $spacing__medium;
+	display: block;
+	width: 100%;
+	max-width: 18em;
+	outline: none;
+	-webkit-appearance: none;
+
+	&:focus {
+		color: $color__tone-100;
+		border-color: $color__brand-1;
+	}
+	.form-inverted & {
+		border-color: $color__tone-0;
+		background-color: $color__tone-0;
+		&:focus {
+			border-color: $color__brand-1;
+		}
+	}
+}
+
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="url"],
+input[type="password"],
+input[type="search"],
+textarea,
+select {
+	padding: $spacing__forms-input-padding;
+}
+
+textarea {
+	width: 100%;
+	max-width: 25em;
+}
+	
+::-webkit-input-placeholder {
+   color: $color__text-input-placeholder;
+}
+::-moz-placeholder {  // Firefox 19+ 
+   color: $color__text-input-placeholder;
+}
+:-ms-input-placeholder {  
+   color: $color__text-input-placeholder;
+}

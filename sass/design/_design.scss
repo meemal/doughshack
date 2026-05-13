@@ -1,0 +1,215 @@
+html {
+	background: $color__tone-0;
+}
+#page {
+	background: $color__tone-0;
+}
+
+@import "typography";
+@import "links";
+@import "tables";
+@import "header";
+@import "menus";
+@import "content";
+@import "features";
+@import "footer";
+@import "page-specific";
+
+
+a.pizza-menu-anchor-link {
+    display: inline-block;
+    padding: $spacing__smaller $spacing__small;
+    margin: $spacing__smaller $spacing__small;
+    color: $color__tone-80;
+    border: solid $color__brand-1;
+    background: $color__brand-1-light;
+    border-radius: 1em;
+    line-height: 1;
+    @include font-size($font__size-bigger);
+    &:hover,
+    &:focus {
+    	background: $color__brand-1;
+    }
+}
+
+
+.link-deliveroo {
+	display: inline-block;
+	width: 125px;
+	height: 125px;
+	background-image: url(img/sprite-b-1.png);
+	background-size: 100% auto;
+	background-position: 0 87.5%;
+	
+	.feature-tabbed-prices & {
+		position: absolute;
+		top: 10px;
+		right: 10px;
+		width: 80px;
+		height: 80px;
+		@include bp-mobile-landscape() {
+			width: 100px;
+			height: 100px;
+		}
+		@include bp-small() {
+			top: -4%;
+			right: -4%;
+		}
+		@include bp-nav-switch() {
+			width: 125px;
+			height: 125px;
+		}
+	}
+}
+
+.page-id-2 {
+	.simcal-event-details:before,
+	.simcal-event-details:after {
+		@include clearfix;
+	}
+	.simcal-event-details:after {
+		@include clearfix-after;
+	}
+}
+
+.js {
+	.page-id-2 {
+		.simcal-events-list-container {
+			.simcal-day,
+			.simcal-day.simcal-disabled {
+				display: none;
+			}
+			.simcal-day.simcal-enabled {
+				display: block;
+			}
+		}
+		
+		// Prev/Next buttons
+		.events-prev-next {
+			display: table;
+			width: 100%;
+			color: #fff;
+			font-family: $font__headings;
+			background: $color__brand-1-bright-dark;
+			span {
+				display: table-cell;
+				text-align: center;
+				padding: $spacing__small;
+			}
+			.events-prev,
+			.events-next  {
+				width: 5em;
+				@include font-size($font__size-body);
+				@include bp-nav-switch() {
+					@include font-size($font__size-big);
+				}
+				&:hover,
+				&:focus {
+					cursor: pointer;   
+				}
+			}
+			.events-today {
+				@include font-size($font__size-h5);
+				@include bp-nav-switch() {
+					@include font-size($font__size-h4);
+				}
+			}
+			.events-next {
+			}
+			.simcal-disabled {
+				visibility: hidden;
+			}
+			.simcal-enabled {
+				visibility: visible;
+			}
+		}
+		
+		.simcal-event-call {
+			display: block;
+			color: inherit;  
+			&:hover,
+			&:focus {
+			 	color: inherit;   
+			}
+		}
+		
+		.simcal-day-empty {
+			ul.simcal-events li.simcal-event {
+				.simcal-event-details {
+					text-align: center;
+					padding: $spacing__small;
+					.simcal-event-start-date {
+						display: none;
+					}
+					p:first-of-type {
+						display: none
+					}
+					h3 {
+						padding-top: $spacing__smallest;
+					}
+				}
+			}
+		}
+		
+		.simcal-events {
+			li {
+				position: relative;
+				> div {
+					padding-right: 65px;
+				}
+				.simcal-event-van1,
+				.simcal-event-van2,
+				.simcal-event-van3 {
+					position: absolute;
+					right: 10px;
+					top: 50%;
+					margin-top: -20px;
+				    width: 68px;
+				    height: 34px;
+					&:before {
+					    content: "";
+					    width: 68px;
+					    height: 34px;
+					    background-image: url(img/sprite-b-1.png);
+					    background-size: 100%;
+					    float: left;
+					}
+				}
+				.simcal-event-van1 {
+					&:before {
+					    background-position: 0 78.05%;
+					}
+				}
+				.simcal-event-van2 {
+					&:before {
+					    background-position: 0 80.5%;
+					}
+				}
+				.simcal-event-van3 {
+					&:before {
+					    background-position: 0 83%;
+					}
+				}
+			}
+		}
+		
+		
+	}
+}
+
+.embed-video-container {
+	margin: $spacing__medium 0;
+	text-align: center;
+	background: url(img/video-frame-bg.jpg) center center no-repeat;
+	background-size: auto 100%;
+	padding: ($spacing__larger * 2) 0;
+	.embed-video-container-inner {
+		padding: $spacing__small + $spacing__small;
+		background-image: url(img/video-frame.jpg);
+		background-size: 100% 100%;
+		display: inline-block;
+	}
+	iframe {
+		margin: 0 auto;
+	}
+}
