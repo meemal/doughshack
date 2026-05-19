@@ -89,29 +89,6 @@ get_header(); ?>
 								</ul>
 							</div>
 						</div>
-						<div class="find-us-takeaway">
-							<div class="find-us-takeaway-inner">
-								<div class="find-us-takeaway-content">
-									<?php if (get_field('takeaway_header')) { ?>
-										<h2><?php echo get_field('takeaway_header'); ?></h2>
-									<?php } ?>
-									<?php if (get_field('takeaway_subheader')) { ?>
-										<h3><?php echo get_field('takeaway_subheader'); ?></h3>
-									<?php } ?>
-									<?php if (get_field('takeaway_content')) { ?>
-										<?php echo get_field('takeaway_content'); ?>
-									<?php } ?>
-									<?php if (get_field('takeaway_deliveroo')) { ?>
-										<a href="<?php echo get_field('takeaway_deliveroo'); ?>" rel="external" target="_blank" class="link-deliveroo"><span class="screen-reader-text">Deliveroo</span></a>
-									<?php } ?>
-								</div>
-		
-								<div class="find-us-takeaway-img">
-									<img src="<?php echo wp_get_attachment_image_src(384, 'large')[0]; ?>">
-									<a href="<?php echo get_permalink(6); ?>#pizzas-menu-2" class="pizza-menu-anchor-link">Pop-up Pizzeria Menu</a>
-								</div>
-							</div>
-						</div>
 						<div class="follow-us clear">
 							<?php if (get_field('charity_button')) { ?>
 								<p class="charity-button"><?php echo get_field('charity_button'); ?></p>

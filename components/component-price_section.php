@@ -28,6 +28,13 @@ endif;
 	if (get_sub_field('section_image')) { 
 		$priceSectionImage = get_sub_field('section_image');
 	}
+	$menu_seperator_image = get_sub_field( 'menu_seperator_image' );
+	$menu_seperator_url    = '';
+	if ( is_array( $menu_seperator_image ) && ! empty( $menu_seperator_image['url'] ) ) {
+		$menu_seperator_url = $menu_seperator_image['url'];
+	} elseif ( is_string( $menu_seperator_image ) && $menu_seperator_image ) {
+		$menu_seperator_url = $menu_seperator_image;
+	}
 	?>
 		<div class="cols clear">
 			<div class="col with-bg-image" style="background-image: url(<?php echo $priceSectionImage; ?>);">
@@ -47,25 +54,44 @@ endif;
 					<a href="<?php echo get_field('takeaway_deliveroo'); ?>" rel="external" target="_blank" class="link-deliveroo"><span class="screen-reader-text">Deliveroo</span></a>
 				<?php }
 				// check for rows (sub repeater)
-				if( have_rows('section_items') ): ?>
-					<dl class="price-list">
-					<?php 
-					while( have_rows('section_items') ): the_row();
-						// output content
-						$priceItemTitle = get_sub_field('item_title');
-						$priceItemDescription = get_sub_field('item_description');
-						$priceItemPrice = get_sub_field('item_price');
-						if ($priceItemTitle && $priceItemPrice) {
-							if ($priceItemTitle) {
-								echo '<dt>'.$priceItemTitle.'<span>'.$priceItemPrice.'</span></dt>';
-							}
-							if ($priceItemDescription) {
-								echo '<dd>'.$priceItemDescription.'<dd>';
+				$section_items = get_sub_field( 'section_items' );
+				if ( ! empty( $section_items ) && is_array( $section_items ) ) :
+					echo '<dl class="price-list">';
+					$dl_open         = true;
+					$section_count   = count( $section_items );
+					foreach ( $section_items as $idx => $row ) {
+						$priceItemTitle       = isset( $row['item_title'] ) ? $row['item_title'] : '';
+						$priceItemDescription = isset( $row['item_description'] ) ? $row['item_description'] : '';
+						$priceItemPrice       = isset( $row['item_price'] ) ? $row['item_price'] : '';
+						$separator_after      = ! empty( $row['add_menu_seperator_underneath'] );
+
+						if ( $priceItemTitle && $priceItemPrice ) {
+							echo '<dt>' . $priceItemTitle . '<span>' . $priceItemPrice . '</span></dt>';
+							if ( $priceItemDescription ) {
+								echo '<dd>' . $priceItemDescription . '</dd>';
 							}
 						}
-					endwhile; ?>
-					</dl>
-				<?php endif; ?>
+
+						if ( $separator_after && $menu_seperator_url ) {
+							echo '</dl>';
+							$dl_open = false;
+							$sep_alt = '';
+							if ( is_array( $menu_seperator_image ) && ! empty( $menu_seperator_image['alt'] ) ) {
+								$sep_alt = $menu_seperator_image['alt'];
+							}
+							$img_alt = $sep_alt ? esc_attr( $sep_alt ) : '';
+							$aria    = $sep_alt ? '' : ' aria-hidden="true"';
+							echo '<div class="menu-sep-wrap"><img src="' . esc_url( $menu_seperator_url ) . '" alt="' . $img_alt . '" class="menu-sep-img"' . $aria . ' /></div>';
+							if ( $idx < $section_count - 1 ) {
+								echo '<dl class="price-list">';
+								$dl_open = true;
+							}
+						}
+					}
+					if ( $dl_open ) {
+						echo '</dl>';
+					}
+				endif; ?>
 				<?php 
 				if ($priceSectionDescriptionAfter) { 
 					echo '<p>'.$priceSectionDescriptionAfter.'</p>';

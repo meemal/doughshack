@@ -1,0 +1,397 @@
+{
+    "key": "group_5661da1404f25",
+    "title": "Page Content",
+    "fields": [
+        {
+            "key": "field_566574b26a208",
+            "label": "Page Intro",
+            "name": "page_intro",
+            "aria-label": "",
+            "type": "repeater",
+            "instructions": "Add content and an image. This will always appear first on the page as a full-width content area with background image.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "collapsed": "",
+            "min": 1,
+            "max": 1,
+            "layout": "block",
+            "button_label": "Add Page Intro",
+            "sub_fields": [
+                {
+                    "key": "field_566574f56a209",
+                    "label": "Text",
+                    "name": "page_intro_text",
+                    "aria-label": "",
+                    "type": "wysiwyg",
+                    "instructions": "Enter content for the page intro.",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "tabs": "all",
+                    "toolbar": "full",
+                    "media_upload": 0,
+                    "delay": 0,
+                    "parent_repeater": "field_566574b26a208"
+                },
+                {
+                    "key": "field_566575116a20a",
+                    "label": "Background Image",
+                    "name": "page_intro_background_image",
+                    "aria-label": "",
+                    "type": "image",
+                    "instructions": "Choose an optional background image for the page intro. Recommended image size is 1800px by 800px.",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": 80,
+                        "class": "",
+                        "id": ""
+                    },
+                    "return_format": "array",
+                    "preview_size": "large",
+                    "library": "all",
+                    "min_width": "",
+                    "min_height": "",
+                    "min_size": "",
+                    "max_width": "",
+                    "max_height": "",
+                    "max_size": "",
+                    "mime_types": "",
+                    "parent_repeater": "field_566574b26a208"
+                }
+            ],
+            "rows_per_page": 20
+        },
+        {
+            "key": "field_5661da922f61c",
+            "label": "Page Content",
+            "name": "page_content",
+            "aria-label": "",
+            "type": "flexible_content",
+            "instructions": "Add content to the page by choosing a layout style. You can add as many as you like and re-order by drag-and-dropping the titles of each block.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "button_label": "Add Page Content Block",
+            "min": "",
+            "max": "",
+            "layouts": [
+                {
+                    "key": "5780447941fe8",
+                    "name": "feature_image_grid",
+                    "label": "Image Grid",
+                    "display": "block",
+                    "sub_fields": [
+                        {
+                            "key": "field_5780447941fe9",
+                            "label": "Instructions",
+                            "name": "",
+                            "aria-label": "",
+                            "type": "message",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "message": "Add a grid of images — please add 4 or 8 images.",
+                            "new_lines": "wpautop",
+                            "esc_html": 1
+                        },
+                        {
+                            "key": "field_5780447941fea",
+                            "label": "Section Title",
+                            "name": "section_title",
+                            "aria-label": "",
+                            "type": "text",
+                            "instructions": "Add an optional section title.",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": "",
+                            "placeholder": "",
+                            "prepend": "",
+                            "append": "",
+                            "maxlength": "",
+                            "readonly": 0,
+                            "disabled": 0
+                        },
+                        {
+                            "key": "field_5780447941feb",
+                            "label": "Images",
+                            "name": "images",
+                            "aria-label": "",
+                            "type": "gallery",
+                            "instructions": "Please add 4 or 8 images.",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "min": "",
+                            "max": "",
+                            "preview_size": "thumbnail",
+                            "insert": "append",
+                            "library": "all",
+                            "min_width": "",
+                            "min_height": "",
+                            "min_size": "",
+                            "max_width": "",
+                            "max_height": "",
+                            "max_size": "",
+                            "mime_types": "",
+                            "return_format": "array"
+                        }
+                    ],
+                    "min": "",
+                    "max": ""
+                },
+                {
+                    "key": "57803cf80b9ca",
+                    "name": "feature_embeds",
+                    "label": "Embedded Content",
+                    "display": "block",
+                    "sub_fields": [
+                        {
+                            "key": "field_578043f105ad1",
+                            "label": "Section Title",
+                            "name": "section_title",
+                            "aria-label": "",
+                            "type": "text",
+                            "instructions": "Add an optional section title.",
+                            "required": "",
+                            "conditional_logic": "",
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": "",
+                            "placeholder": "",
+                            "prepend": "",
+                            "append": "",
+                            "maxlength": "",
+                            "readonly": 0,
+                            "disabled": 0
+                        },
+                        {
+                            "key": "field_57803d0f0b9cb",
+                            "label": "Instagram Embeds",
+                            "name": "instagram_embeds",
+                            "aria-label": "",
+                            "type": "repeater",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "collapsed": "",
+                            "min": 0,
+                            "max": 0,
+                            "layout": "table",
+                            "button_label": "Add Instagram Embed",
+                            "sub_fields": [
+                                {
+                                    "key": "field_57803d1e0b9cc",
+                                    "label": "Instagram URL",
+                                    "name": "instagram_url",
+                                    "aria-label": "",
+                                    "type": "text",
+                                    "instructions": "Add the Instagram URL.",
+                                    "required": 1,
+                                    "conditional_logic": 0,
+                                    "wrapper": {
+                                        "width": "",
+                                        "class": "",
+                                        "id": ""
+                                    },
+                                    "default_value": "",
+                                    "placeholder": "",
+                                    "prepend": "",
+                                    "append": "",
+                                    "maxlength": "",
+                                    "readonly": 0,
+                                    "disabled": 0,
+                                    "parent_repeater": "field_57803d0f0b9cb"
+                                }
+                            ],
+                            "rows_per_page": 20
+                        },
+                        {
+                            "key": "field_57803ef30b9cd",
+                            "label": "Twitter Embeds",
+                            "name": "twitter_embeds",
+                            "aria-label": "",
+                            "type": "repeater",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "collapsed": "",
+                            "min": 0,
+                            "max": 0,
+                            "layout": "table",
+                            "button_label": "Add Twitter Embed",
+                            "sub_fields": [
+                                {
+                                    "key": "field_57803ef30b9ce",
+                                    "label": "Twitter URL",
+                                    "name": "twitter_url",
+                                    "aria-label": "",
+                                    "type": "text",
+                                    "instructions": "Add the Twitter URL.",
+                                    "required": 1,
+                                    "conditional_logic": 0,
+                                    "wrapper": {
+                                        "width": "",
+                                        "class": "",
+                                        "id": ""
+                                    },
+                                    "default_value": "",
+                                    "placeholder": "",
+                                    "prepend": "",
+                                    "append": "",
+                                    "maxlength": "",
+                                    "readonly": 0,
+                                    "disabled": 0,
+                                    "parent_repeater": "field_57803ef30b9cd"
+                                }
+                            ],
+                            "rows_per_page": 20
+                        },
+                        {
+                            "key": "field_57803f290b9cf",
+                            "label": "Manual Quote Embeds",
+                            "name": "manual_quote_embeds",
+                            "aria-label": "",
+                            "type": "repeater",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "collapsed": "",
+                            "min": 0,
+                            "max": 0,
+                            "layout": "block",
+                            "button_label": "Add Manual Quote",
+                            "sub_fields": [
+                                {
+                                    "key": "field_57803f7b0b9d1",
+                                    "label": "Quote Content",
+                                    "name": "quote_embed_content",
+                                    "aria-label": "",
+                                    "type": "text",
+                                    "instructions": "",
+                                    "required": 0,
+                                    "conditional_logic": 0,
+                                    "wrapper": {
+                                        "width": "",
+                                        "class": "",
+                                        "id": ""
+                                    },
+                                    "default_value": "",
+                                    "placeholder": "",
+                                    "prepend": "",
+                                    "append": "",
+                                    "maxlength": "",
+                                    "readonly": 0,
+                                    "disabled": 0,
+                                    "parent_repeater": "field_57803f290b9cf"
+                                },
+                                {
+                                    "key": "field_57803f9b0b9d2",
+                                    "label": "Quote Reference",
+                                    "name": "quote_embed_reference",
+                                    "aria-label": "",
+                                    "type": "text",
+                                    "instructions": "",
+                                    "required": 0,
+                                    "conditional_logic": 0,
+                                    "wrapper": {
+                                        "width": "",
+                                        "class": "",
+                                        "id": ""
+                                    },
+                                    "default_value": "",
+                                    "placeholder": "",
+                                    "prepend": "",
+                                    "append": "",
+                                    "maxlength": "",
+                                    "readonly": 0,
+                                    "disabled": 0,
+                                    "parent_repeater": "field_57803f290b9cf"
+                                }
+                            ],
+                            "rows_per_page": 20
+                        }
+                    ],
+                    "min": "",
+                    "max": ""
+                }
+            ]
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
+                "value": "page"
+            },
+            {
+                "param": "page",
+                "operator": "!=",
+                "value": "2"
+            }
+        ]
+    ],
+    "menu_order": 10,
+    "position": "acf_after_title",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": [
+        "the_content",
+        "excerpt"
+    ],
+    "active": true,
+    "description": "",
+    "show_in_rest": 0,
+    "display_title": "",
+    "allow_ai_access": false,
+    "ai_description": "",
+    "modified": 1778676846
+}

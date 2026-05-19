@@ -198,6 +198,7 @@
 			if ($('.show-todays-events .no-events').length > 0 || $('.simcal-events-list-container .simcal-day:first-child').hasClass('simcal-day-empty')) {
 				$(".map-canvas-container").addClass('map-no-events');
 			}
+			thedoughshackSplitTelFromEventTitles();
 			$('.find-us-title h2 + p').append('<small>Click any item to view on the map&hellip;</small>');
 			$('.show-weekly-events').after('<div class="events-show" tabindex="0"><p>Click to view rest of week&hellip;</p></div>');
 			$(".events-show").on( "click", function() {
@@ -209,7 +210,45 @@
 		<?php }	?>
 		
 		<?php if (is_front_page() || is_page(6)) { ?>
-			
+			function thedoughshackSplitTelFromEventTitles($context) {
+				var $targets = ($context && $context.length)
+					? $context.find('.simcal-event-details')
+					: $('.show-todays-events .simcal-event-details, .show-weekly-events .simcal-event-details');
+				$targets.each(function() {
+					var $details = $(this);
+					var $h3 = $details.find('h3').first();
+					if (!$h3.length || $h3.next('.simcal-event-phone-sub').length) return;
+					var $span = $h3.children('span').first();
+					if (!$span.length) return;
+
+					var $tel = $span.find('a[href]').filter(function() {
+						return /^tel:/i.test(($(this).attr('href') || '').trim());
+					}).first();
+
+					if ($tel.length) {
+						var href = ($tel.attr('href') || '').trim();
+						var displayText = $.trim($tel.text()) || href.replace(/^tel:\s*/i, '');
+						$tel.detach();
+						var $sub = $('<p class="simcal-event-phone-sub"></p>').insertAfter($h3);
+						$sub.append($('<a></a>').attr('href', href).text(displayText));
+						return;
+					}
+
+					var html = $span.html();
+					if (!html) return;
+					var m = html.match(/(?:<br\s*\/?>|\s|&nbsp;)*tel:\s*([+\d\s\u00a0().\-—]+)/i);
+					if (m) {
+						var rawPhone = m[1].replace(/[\s\u00a0]+/g, ' ').trim();
+						if (!rawPhone) return;
+						var digits = rawPhone.replace(/[^\d+]/g, '');
+						var telHref = 'tel:' + (digits || rawPhone.replace(/\s+/g, ''));
+						$span.html(html.replace(m[0], ' ').replace(/\s{2,}/g, ' ').trim());
+						var $sub2 = $('<p class="simcal-event-phone-sub"></p>').insertAfter($h3);
+						$sub2.append($('<a></a>').attr('href', telHref).text(rawPhone));
+					}
+				});
+			}
+
         	var isDraggable = !('ontouchstart' in document.documentElement);
 			if (!isDraggable) {
 				$('.page-intro .section-inner').append('<a href="tel:02034881064" class="call-ahead lightbox">Call ahead</a>');
@@ -242,6 +281,9 @@
 		endwhile;
 	endif; 
 ?>
+					if (typeof thedoughshackSplitTelFromEventTitles === 'function') {
+						thedoughshackSplitTelFromEventTitles($('#lightbox'));
+					}
 					e.preventDefault();
 				});
 				
@@ -289,7 +331,8 @@
 			        ShackMap.loadMarker(initMarker);
 			    },
 			
-			    codeMarker: function(title, address, time, eventvan) {
+			    codeMarker: function(title, address, time, eventvan, phoneHtml) {
+			        phoneHtml = phoneHtml || '';
 			        geocoder = new google.maps.Geocoder();
 		            if (eventvan == 'simcal-event-van3') {
 			            var pointerImage =  '<?php echo get_stylesheet_directory_uri(); ?>/img/pointer-3.png';
@@ -312,7 +355,7 @@
 			                    position: results[0].geometry.location
 			                });
 							ShackMap.infowindow = new google.maps.InfoWindow({
-								content: "<strong>" + title+'<br />'+time + "</strong><br />" + address,
+								content: "<strong>" + title + '<br />' + time + "</strong>" + (phoneHtml || '') + "<br />" + address,
 								maxWidth: 260
 							});
 							ShackMap.infowindow.open(ShackMap.map,ShackMap.marker);
@@ -328,9 +371,11 @@
 					var event = item.find('h3 > span');
 					var eventvan = event.find("span").attr('class');
 					var eventtitle = event.html();
+					var $phoneSub = item.find('.simcal-event-phone-sub').first();
+					var phoneHtml = $phoneSub.length ? '<div class="map-infowindow-phone">' + $phoneSub.html() + '</div>' : '';
 					var eventlocation = item.find('h4 span').text();
 					var eventtime = item.find('p:first-of-type').text();
-					ShackMap.codeMarker(eventtitle, eventlocation, eventtime, eventvan);
+					ShackMap.codeMarker(eventtitle, eventlocation, eventtime, eventvan, phoneHtml);
 			    }
 			    
 			};

@@ -52,14 +52,46 @@ endif; // thedoughshack_setup
 add_action( 'after_setup_theme', 'thedoughshack_setup' );
 
 /**
+ * ACF Local JSON: field group definitions live in the theme (acf-json/) for version control and deploys.
+ *
+ * @link https://www.advancedcustomfields.com/resources/local-json/
+ */
+function thedoughshack_acf_json_save_path( $path ) {
+	return get_stylesheet_directory() . '/acf-json';
+}
+
+function thedoughshack_acf_json_load_paths( $paths ) {
+	if ( isset( $paths[0] ) ) {
+		unset( $paths[0] );
+	}
+	$paths[] = get_stylesheet_directory() . '/acf-json';
+	return $paths;
+}
+
+if ( defined( 'ACF_VERSION' ) ) {
+	add_filter( 'acf/settings/save_json', 'thedoughshack_acf_json_save_path' );
+	add_filter( 'acf/settings/load_json', 'thedoughshack_acf_json_load_paths' );
+}
+
+/**
  * Enqueue scripts and styles.
  */
 function thedoughshack_scripts() {
 	// Soft cache buster - Set style.css to theme version
 	$themeVersion = wp_get_theme()->get('Version');
-	// Hard cache buster - Set style.css to current time if on localhost or site is not public
-	if ( $_SERVER["SERVER_ADDR"] == '127.0.0.1' || 0 == get_option( 'blog_public' )) {
-		$themeVersion = time();
+
+	// Hard cache buster - time() when developing locally or site is not public.
+	// Prefer WP_ENVIRONMENT_TYPE=local (wp_get_environment_type), or define THEDOUGHSHACK_DEV in wp-config.php.
+	$hard_cache_bust = ( 0 === (int) get_option( 'blog_public' ) );
+	if ( defined( 'THEDOUGHSHACK_DEV' ) && THEDOUGHSHACK_DEV ) {
+		$hard_cache_bust = true;
+	} elseif ( function_exists( 'wp_get_environment_type' ) && 'local' === wp_get_environment_type() ) {
+		$hard_cache_bust = true;
+	} elseif ( ! empty( $_SERVER['SERVER_ADDR'] ) && in_array( $_SERVER['SERVER_ADDR'], array( '127.0.0.1', '::1' ), true ) ) {
+		$hard_cache_bust = true;
+	}
+	if ( $hard_cache_bust ) {
+		$themeVersion = (string) time();
 	}
 	wp_enqueue_style( 'thedoughshack-style', get_stylesheet_uri(), array(), $themeVersion );
 

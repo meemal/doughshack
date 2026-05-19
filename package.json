@@ -1,0 +1,14 @@
+{
+  "name": "thedoughshack-theme",
+  "private": true,
+  "scripts": {
+    "build": "sass sass/style.scss style.css --load-path=sass --no-source-map --quiet",
+    "build:verbose": "sass sass/style.scss style.css --load-path=sass --no-source-map",
+    "watch": "sass sass/style.scss style.css --load-path=sass --watch --embed-source-map --quiet",
+    "dist": "npm run build && node scripts/package-dist.mjs",
+    "dist:zip": "npm run dist && cd dist && zip -r ../thedoughshack-theme-upload.zip thedoughshack"
+  },
+  "devDependencies": {
+    "sass": "^1.77.0"
+  }
+}

@@ -554,7 +554,7 @@
 	}
 	h3 {
 		text-transform: uppercase;
-		font-weight: bold;
+		
 	}
 	.simcal-events-list-container {
 		//border-top: 1px dashed $color__tone-40;
@@ -568,7 +568,7 @@
 		margin: 0;
 		list-style: none;
 		* {
-			line-height: $font__line-height-body;
+			// line-height: $font__line-height-body;
 		}
 		li.simcal-event {
 			margin: 0;
@@ -629,6 +629,32 @@
 				}
 				h3 {
 					padding-top: $spacing__smaller;
+					@include font-size($font__size-body);
+					font-family: $font__main;
+					font-weight: $font__weight-hanken-black;
+					line-height: $font__line-height-tight;
+					strong,
+					b {
+						font-weight: inherit;
+					}
+				}
+				.simcal-event-phone-sub {
+					margin: 0;
+					padding: 0 $spacing__smaller $spacing__smallest 0;
+					clear: none;
+					@include font-size(0.8125);
+					font-family: $font__main;
+					font-weight: $font__weight-normal;
+					text-transform: none;
+					line-height: $font__line-height-body;
+					a {
+						color: inherit;
+				
+						&:hover,
+						&:focus {
+							color: $color__tone-60;
+						}
+					}
 				}
 				h4 {
 					padding-bottom: $spacing__smaller;
@@ -1014,7 +1040,26 @@
 			max-width: 19em;
 		}
 	}
-	
+
+	.menu-sep-wrap {
+		display: block;
+		text-align: center;
+		margin: 32px 0;
+		max-width: 22em;
+	}
+
+	.menu-sep-img {
+		display: block;
+		margin: 0 auto 8px auto;
+		height: auto;
+	}
+
+	.menu-sep-title {
+		margin: 0;
+		line-height: 1.3;
+		font-weight: 600;
+	}
+
 	.feature-alternating-grid {
 		.cols {
 			h2 {

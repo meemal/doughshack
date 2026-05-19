@@ -1,17 +1,45 @@
-/* Web Fonts */
+/* Web Fonts — Hanken Grotesk (same family name: use font-weight 400 / 500 / 700 / 900) */
 @font-face {
-    font-family: 'hanken';
-    src: url('fonts/hanken-book-webfont.woff2') format('woff2'),
-         url('fonts/hanken-book-webfont.woff') format('woff');
-    font-weight: bold;
-    font-style: bold;
+	font-family: 'hanken';
+	src: url('fonts/hanken-light-webfont.woff2') format('woff2'),
+		url('fonts/hanken-light-webfont.woff') format('woff');
+	font-weight: 400;
+	font-style: normal;
 }
 @font-face {
-    font-family: 'hanken';
-    src: url('fonts/hanken-light-webfont.woff2') format('woff2'),
-         url('fonts/hanken-light-webfont.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
+	font-family: 'hanken';
+	src: url('fonts/hanken-book-webfont.woff2') format('woff2'),
+		url('fonts/hanken-book-webfont.woff') format('woff');
+	font-weight: 500;
+	font-style: normal;
+}
+@font-face {
+	font-family: 'hanken';
+	src: url('fonts/HankenGrotesk-Bold.woff2') format('woff2'),
+		url('fonts/HankenGrotesk-Bold.woff') format('woff');
+	font-weight: 700;
+	font-style: normal;
+}
+@font-face {
+	font-family: 'hanken';
+	src: url('fonts/HankenGrotesk-Black.woff2') format('woff2'),
+		url('fonts/HankenGrotesk-Black.woff') format('woff');
+	font-weight: 900;
+	font-style: normal;
+}
+
+/* Hanken Grotesk weight helpers (uses @font-face weights 400 / 500 / 700 / 900 on font-family: hanken) */
+.font-hanken--medium {
+	font-family: $font__main;
+	font-weight: $font__weight-medium;
+}
+.font-hanken--bold {
+	font-family: $font__main;
+	font-weight: $font__weight-bold;
+}
+.font-hanken--black {
+	font-family: $font__main;
+	font-weight: $font__weight-hanken-black;
 }
 
 /* Web Fonts - Graceful loading */
