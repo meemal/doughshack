@@ -951,6 +951,32 @@
 
 /* Pizzas Page */
 .page-id-6 {
+	// Weekly / Call ahead calendar: single column (time above title); day is in the header bar.
+	.simcal-calendar ul.simcal-events li.simcal-event {
+		.simcal-event-details {
+			padding-left: $spacing__small;
+			padding-right: 65px;
+
+			p:first-of-type {
+				width: 100%;
+				float: none;
+				margin-left: 0;
+				padding: 0 0 $spacing__smallest 0;
+			}
+		}
+
+		> a.simcal-event-call {
+			display: block;
+			color: inherit;
+			text-decoration: none;
+
+			&:hover,
+			&:focus {
+				color: inherit;
+			}
+		}
+	}
+
 	.pizzas-menu {
 		padding-bottom: $spacing__medium;
 		@include bp-small() {

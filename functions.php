@@ -111,6 +111,99 @@ function thedoughshack_scripts() {
 }
 add_action( 'wp_enqueue_scripts', 'thedoughshack_scripts' );
 
+/**
+ * Weekly SimCal shortcode for Call ahead lightbox (shared home + pizzas).
+ * Filter with thedoughshack_weekly_calendar_shortcode to override.
+ * Otherwise resolves from the front page content (first [calendar] id other than 508).
+ *
+ * @return string Shortcode tag, e.g. [calendar id="123"].
+ */
+function thedoughshack_get_weekly_calendar_shortcode() {
+	$filtered = apply_filters( 'thedoughshack_weekly_calendar_shortcode', '' );
+	if ( is_string( $filtered ) && '' !== trim( $filtered ) ) {
+		return trim( $filtered );
+	}
+
+	static $resolved = null;
+	if ( null !== $resolved ) {
+		return $resolved;
+	}
+
+	$resolved        = '[calendar id="508"]';
+	$today_calendar  = 508;
+	$home_id         = (int) get_option( 'page_on_front' );
+
+	if ( $home_id > 0 ) {
+		$home = get_post( $home_id );
+		if ( $home instanceof WP_Post && preg_match_all( '/\[calendar\s+id=["\']?(\d+)/i', $home->post_content, $matches ) ) {
+			$ids = array_map( 'intval', $matches[1] );
+			foreach ( $ids as $id ) {
+				if ( $today_calendar !== $id ) {
+					$resolved = '[calendar id="' . $id . '"]';
+					return $resolved;
+				}
+			}
+		}
+	}
+
+	return $resolved;
+}
+
+/**
+ * Post ID where the Home Page Content ACF vans repeater is stored.
+ *
+ * @return int
+ */
+function thedoughshack_get_vans_acf_post_id() {
+	static $post_id = null;
+	if ( null !== $post_id ) {
+		return $post_id;
+	}
+	$post_id = (int) get_option( 'page_on_front' );
+	if ( $post_id < 1 ) {
+		$post_id = 2;
+	}
+	return $post_id;
+}
+
+/**
+ * Takeaway row HTML appended inside the Call ahead lightbox (shared home + pizzas).
+ *
+ * @return string Markup or empty string.
+ */
+function thedoughshack_get_call_ahead_takeaway_markup() {
+	if ( ! function_exists( 'get_field' ) || ! get_field( 'takeaway_phone', 2 ) ) {
+		return '';
+	}
+
+	$phone   = get_field( 'takeaway_phone', 2 );
+	$header  = get_field( 'takeaway_header', 2 );
+	$tel     = preg_replace( '/\s+/', '', $phone );
+
+	ob_start();
+	?>
+	<div class="find-us-takeaway find-us-takeaway--lightbox">
+		<div class="find-us-takeaway-inner">
+			<div class="find-us-takeaway-content">
+				<ul class="simcal-events">
+					<li class="simcal-event">
+						<a href="tel:<?php echo esc_attr( $tel ); ?>" class="simcal-event-call">
+							<div class="simcal-event-details">
+								<?php if ( $header ) { ?>
+									<p><?php echo esc_html( $header ); ?></p>
+								<?php } ?>
+								<h3>Call Now: <?php echo esc_html( $phone ); ?><span class="simcal-event-van3" aria-label="Van 3"><span class="screen-reader-text">Van 3</span></span></h3>
+								<h4>&nbsp;</h4>
+							</div>
+						</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<?php
+	return ob_get_clean();
+}
 
 /**
  * Custom template tags for this theme.

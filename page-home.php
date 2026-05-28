@@ -46,7 +46,7 @@ get_header(); ?>
 					</div><!-- .section-inner -->
 				</div><!-- .section -->
 					
-				<div class="section feature-find-us">
+				<div id="feature-find-us" class="section feature-find-us">
 					
 					<div class="map-canvas-container map-canvas-closed"><div id="map-canvas"></div></div>
 					<div class="section-inner">

@@ -1,42 +1,107 @@
 #lightbox {
-    position:fixed; /* keeps the lightbox window in the current viewport */
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
 	background: #000;
-	background: rgba(0,0,0,.85);
-    overflow: hidden;
-    z-index: 999999;
-	.events-prev,
-	.events-next  {
-		display: none;
+	background: rgba(0, 0, 0, 0.85);
+	overflow-x: hidden;
+	overflow-y: auto;
+	z-index: 999999;
+
+	.feature-find-us--lightbox {
+		max-width: 26em;
+		margin: ($spacing__largest + $spacing__medium) auto $spacing__large;
+		@include bp-medium-large() {
+			max-width: 30em;
+		}
+
+		// Home page normally hides this block in JS mode; popup needs it visible.
+		.show-weekly-events {
+			display: block !important;
+		}
+
+		.section-inner {
+			padding: 0;
+			max-width: none;
+			background: #fff;
+		}
+
+		.find-us-takeaway--lightbox {
+			position: relative;
+			top: -6px;
+
+			.find-us-takeaway-inner {
+				background: $color__tone-80;
+				border: solid $color__brand-1 4px;
+			}
+
+			.find-us-takeaway-content {
+				padding: $spacing__medium;
+				color: #fff;
+			}
+
+			.simcal-event-call {
+				color: inherit;
+			}
+		}
 	}
-	.simcal-event-details {
-		padding-left: $spacing__small;
-		padding-bottom: $spacing__small;
-		padding-right: 65px;
+
+	.simcal-calendar ul.simcal-events li.simcal-event {
+		.simcal-event-details {
+			display: grid;
+			grid-template-columns: 7.5em 1fr;
+			column-gap: $spacing__smallest;
+			padding: $spacing__smaller $spacing__small;
+
+			p:first-of-type {
+				width: auto;
+				margin: 0;
+				float: none;
+				padding: 0;
+				grid-column: 1;
+			}
+
+			.simcal-event-start-date,
+			.simcal-event-end-date {
+				display: none;
+			}
+
+			h3,
+			.simcal-event-phone-sub {
+				grid-column: 2;
+			}
+
+			h3 {
+				padding-right: 0;
+				padding-top: 0;
+			}
+
+			h4 {
+				display: none;
+			}
+		}
+
+		.simcal-event-van1,
+		.simcal-event-van2,
+		.simcal-event-van3 {
+			display: none;
+		}
 	}
-	.simcal-event-start-date {
-		display: none;
-	}
-	.simcal-event-details p:first-of-type {
-		width: 100%;
-		float: none;
-		margin-left: 0;
-		padding-bottom: 0;
-		padding-left: 0;
-	}
-	h3 {
-		padding-top: $spacing__smallest;
-	}
-	h4 {
-		display: none;
+
+	// Keep nav cell widths so date heading remains perfectly centered.
+	.events-prev-next {
+		.events-prev,
+		.events-next {
+			display: table-cell;
+		}
 	}
 }
+
 .lightbox-close {
 	position: absolute;
-    right: 0;
+	right: 0;
 	color: #fff;
 	font-family: $font__headings;
 	padding: ($spacing__medium - 0.3em) $spacing__medium;
@@ -46,6 +111,6 @@
 	}
 	&:hover,
 	&:focus {
-		cursor: pointer;   
+		cursor: pointer;
 	}
 }

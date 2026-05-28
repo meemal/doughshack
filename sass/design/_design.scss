@@ -73,7 +73,9 @@ a.pizza-menu-anchor-link {
 }
 
 .js {
-	.page-id-2 {
+	.page-id-2,
+	.page-id-6,
+	#lightbox {
 		.simcal-events-list-container {
 			.simcal-day,
 			.simcal-day.simcal-disabled {
@@ -132,7 +134,7 @@ a.pizza-menu-anchor-link {
 			 	color: inherit;   
 			}
 		}
-		
+
 		.simcal-day-empty {
 			ul.simcal-events li.simcal-event {
 				.simcal-event-details {

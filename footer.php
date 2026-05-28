@@ -14,12 +14,8 @@
 	</div><!-- #content -->
 
 	<?php
-	if ( shortcode_exists( 'calendar' ) && is_page(6) ) {
-		// Get Today's Events feed
-		$todayEvents = do_shortcode('[calendar id="508"]');
-		if ($todayEvents != "") {
-			echo '<div class="show-todays-events" style="display: none;">'.$todayEvents.'</div>';
-		}
+	if ( shortcode_exists( 'calendar' ) && ( is_front_page() || is_page( 6 ) ) ) {
+		get_template_part( 'components/component', 'call_ahead_source' );
 	}
 	?>
 
@@ -108,83 +104,190 @@
 		});
 	
 		<?php if (is_front_page() || is_page(6)) { ?>
+			<?php $thedoughshack_vans_post_id = function_exists( 'thedoughshack_get_vans_acf_post_id' ) ? thedoughshack_get_vans_acf_post_id() : 2; ?>
 
-			<?php
-			if( have_rows('vans') ):
-				while( have_rows('vans') ) : the_row();
-					$van = get_sub_field('van_number');
-					if ($van == '2' || $van == '3') {
-						$icon = $van;
-					} else {
-						$icon = '1';
+			var thedoughshackWeekDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+			function thedoughshackApplyVanIcons($scope) {
+				$scope = $scope || $(document);
+				$scope.find('.simcal-event-details').each(function() {
+					var $details = $(this);
+					var $targets = $details.find('.simcal-event-title');
+					if (!$targets.length) {
+						$targets = $details.find('h3').first();
 					}
-					?>
-					$('.simcal-events-list-container .simcal-event-title').html(function(index,str){
-							return str.replace(/Van <?php echo $van; ?>: /gi, '<span class="simcal-event-van<?php echo $icon; ?> simcal-event-van-tel-<?php echo $van; ?>"><span class="screen-reader-text">Van <?php echo $van; ?>: </span></span>');
+					if (!$targets.length) {
+						return;
+					}
+					$targets.each(function() {
+						var $el = $(this);
+						var html = $el.html();
+						if (!html || /simcal-event-van\d/.test(html)) {
+							return;
+						}
+						<?php
+						if ( have_rows( 'vans', $thedoughshack_vans_post_id ) ) :
+							while ( have_rows( 'vans', $thedoughshack_vans_post_id ) ) :
+								the_row();
+								$van = get_sub_field( 'van_number' );
+								if ( '2' === $van || '3' === $van ) {
+									$icon = $van;
+								} else {
+									$icon = '1';
+								}
+								?>
+						html = html.replace(/Van\s*<?php echo esc_js( $van ); ?>\s*:\s*/gi, '<span class="simcal-event-van<?php echo esc_js( $icon ); ?> simcal-event-van-tel-<?php echo esc_js( $van ); ?>" aria-label="Van <?php echo esc_js( $van ); ?>"><span class="screen-reader-text">Van <?php echo esc_js( $van ); ?></span></span>');
+								<?php
+							endwhile;
+						endif;
+						?>
+						html = html.replace(/Van\s*\d+\s*:\s*/gi, '');
+						$el.html(html);
 					});
-				<?php endwhile;
-			endif; ?>
-			
-			var daysStore = [];
-			var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-			var output = "";
-			var today = new Date();
-			var todayNum = today.getDay();
-			for (i = todayNum; i <= (todayNum+6); i++) {
-				if (i > 6) {
-					j = i - 7;
-				} else {
-					j = i;
-				}
-				var currentWeekday = $('.simcal-events-list-container .simcal-weekday-'+j);
-				if (currentWeekday.length < 1) {
-					output += '<div class="simcal-weekday-'+j+' simcal-day simcal-day-empty"><ul class="simcal-events"><li class="simcal-event"><div class="simcal-event-details"><p><span class="simcal-event-start simcal-event-start-date">'+days[j]+'</span></p><h3>No party today.</h3><h4>Please try another day.</h4></div></li></ul></div>';
-				} else {
-					output += currentWeekday.get(0).outerHTML;
-				}
+				});
 			}
-			$('.simcal-events-list-container').html(output);
-			$('.simcal-events-list-container').before('<div class="events-prev-next"><span class="events-prev">&#8249;&nbsp;Prev</span> <span class="events-today">'+days[todayNum]+'</span> <span class="events-next">Next&nbsp;&#8250;</span></div>');
-			$('.simcal-events-list-container .simcal-day, .events-prev-next .events-prev').addClass('simcal-disabled');
-			$('.simcal-events-list-container .simcal-day:first-child').removeClass('simcal-disabled').addClass('simcal-enabled');
-			
-			$('.events-next').on( 'click', function() {
-				var weekday = $('.simcal-events-list-container .simcal-day.simcal-enabled');
-				var weekdayNext = weekday.next('.simcal-day');
-				if (weekdayNext.length > 0) {
-					var weekdayNextClass = weekdayNext.attr('class').split(' ')[0];
-					var weekdayNumber = weekdayNextClass.slice(-1);
-					
-					$('.events-prev-next .events-today').text(days[weekdayNumber]);
-					weekday.slideUp().removeClass('simcal-enabled').next('.simcal-day').slideDown().addClass('simcal-enabled');
-					if (weekdayNext.next('.simcal-day').length == 0) {
-						$('.events-prev-next .events-next').removeClass('simcal-enabled').addClass('simcal-disabled');
+
+			function thedoughshackInitCalendarWeekNav($scope) {
+				$scope = $scope || $(document);
+				var todayNum = new Date().getDay();
+
+				$scope.find('.simcal-events-list-container').each(function() {
+					var $container = $(this);
+					if ($container.data('thedoughshackWeekNav')) {
+						return;
 					}
-					if (weekday.prev('.simcal-day').length == 0) {
-						$('.events-prev-next .events-prev').removeClass('simcal-disabled').addClass('simcal-enabled');
+					$container.data('thedoughshackWeekNav', true);
+
+					var output = '';
+					var i, j;
+					for (i = todayNum; i <= (todayNum + 6); i++) {
+						j = i > 6 ? i - 7 : i;
+						var $weekday = $container.find('.simcal-weekday-' + j).first();
+						if ($weekday.length < 1) {
+							output += '<div class="simcal-weekday-' + j + ' simcal-day simcal-day-empty"><ul class="simcal-events"><li class="simcal-event"><div class="simcal-event-details"><p><span class="simcal-event-start simcal-event-start-date">' + thedoughshackWeekDays[j] + '</span></p><h3>No party today.</h3><h4>Please try another day.</h4></div></li></ul></div>';
+						} else {
+							output += $weekday.get(0).outerHTML;
+						}
+					}
+					$container.html(output);
+
+					var $nav = $container.prev('.events-prev-next');
+					if (!$nav.length) {
+						$nav = $('<div class="events-prev-next"><span class="events-prev">&#8249;&nbsp;Prev</span> <span class="events-today"></span> <span class="events-next">Next&nbsp;&#8250;</span></div>');
+						$container.before($nav);
+					}
+					$nav.find('.events-today').text(thedoughshackGetDayHeaderText($container.find('.simcal-day:first-child')));
+					$container.find('.simcal-day').addClass('simcal-disabled');
+					$nav.find('.events-prev').addClass('simcal-disabled');
+					$container.find('.simcal-day:first-child').removeClass('simcal-disabled').addClass('simcal-enabled');
+				});
+			}
+
+			function thedoughshackWrapVanTelLinks($scope) {
+				$scope = $scope || $(document);
+				<?php
+				if ( have_rows( 'vans', $thedoughshack_vans_post_id ) ) :
+					while ( have_rows( 'vans', $thedoughshack_vans_post_id ) ) :
+						the_row();
+						$van    = get_sub_field( 'van_number' );
+						$vanTel = get_sub_field( 'van_telephone_number' );
+						if ( $van && $vanTel ) {
+							$van_tel_href = preg_replace( '/\s+/', '', $vanTel );
+							?>
+				$scope.find('.simcal-event-van-tel-<?php echo esc_js( $van ); ?>').each(function() {
+					var $event = $(this).closest('.simcal-event');
+					if (!$event.length || $event.children('a.simcal-event-call').length) {
+						return;
+					}
+					$event.wrapInner('<a href="tel:<?php echo esc_js( $van_tel_href ); ?>" class="simcal-event-call"></a>');
+				});
+							<?php
+						}
+					endwhile;
+				endif;
+				?>
+			}
+
+			function thedoughshackInitCallAheadCalendars() {
+				var $scopes = $('#thedoughshack-call-ahead-source, .feature-find-us');
+				thedoughshackApplyVanIcons($scopes);
+				thedoughshackInitCalendarWeekNav($scopes);
+				if (typeof thedoughshackSplitTelFromEventTitles === 'function') {
+					thedoughshackSplitTelFromEventTitles($('#thedoughshack-call-ahead-source'));
+					thedoughshackSplitTelFromEventTitles($('.feature-find-us'));
+				}
+				<?php if ( is_page( 6 ) ) { ?>
+				thedoughshackWrapVanTelLinks($('#thedoughshack-call-ahead-source'));
+				thedoughshackWrapVanTelLinks($('.page-id-6 .simcal-calendar'));
+				<?php } ?>
+			}
+
+			function thedoughshackGetCallAheadCalendarEl() {
+				var $candidates = $(
+					'#thedoughshack-call-ahead-source .simcal-calendar, ' +
+					'.feature-find-us .show-weekly-events .simcal-calendar, ' +
+					'.feature-find-us .simcal-calendar, ' +
+					'.show-weekly-events .simcal-calendar'
+				);
+				var $selected = $();
+
+				$candidates.each(function() {
+					var $cal = $(this);
+					if ($selected.length) return;
+					if ($.trim($cal.text()) === '') return;
+					if ($cal.find('.simcal-events-list-container').length < 1) return;
+					$selected = $cal;
+				});
+
+				return $selected;
+			}
+
+			function thedoughshackGetDayHeaderText($day) {
+				var fullDate = $.trim($day.find('.simcal-event-start-date').first().text());
+				if (fullDate !== '') {
+					return fullDate;
+				}
+				return $.trim($day.find('.simcal-event-start').first().text());
+			}
+
+			var thedoughshackCallAheadTakeaway = <?php echo wp_json_encode( function_exists( 'thedoughshack_get_call_ahead_takeaway_markup' ) ? thedoughshack_get_call_ahead_takeaway_markup() : '' ); ?>;
+
+			$(document).on('click', '.events-next', function() {
+				var $nav = $(this).closest('.events-prev-next');
+				var $container = $nav.next('.simcal-events-list-container');
+				var $weekday = $container.find('.simcal-day.simcal-enabled');
+				var $weekdayNext = $weekday.next('.simcal-day');
+				if ($weekdayNext.length > 0) {
+					$nav.find('.events-today').text(thedoughshackGetDayHeaderText($weekdayNext));
+					$weekday.slideUp().removeClass('simcal-enabled');
+					$weekdayNext.slideDown().addClass('simcal-enabled');
+					if ($weekdayNext.next('.simcal-day').length === 0) {
+						$nav.find('.events-next').removeClass('simcal-enabled').addClass('simcal-disabled');
+					}
+					if ($weekday.prev('.simcal-day').length === 0) {
+						$nav.find('.events-prev').removeClass('simcal-disabled').addClass('simcal-enabled');
 					}
 				}
 			});
-			$('.events-prev').on( 'click', function() {
-				var weekday = $('.simcal-events-list-container .simcal-day.simcal-enabled');
-				var weekdayPrev = weekday.prev('.simcal-day');
-				if (weekdayPrev.length > 0) {
-					var currentDate = weekdayPrev.find('.simcal-event-start').text();
-					var currentDay = currentDate.substr(0, currentDate.indexOf(','));
-					if (currentDay == "") {
-						currentDay = currentDate;
+
+			$(document).on('click', '.events-prev', function() {
+				var $nav = $(this).closest('.events-prev-next');
+				var $container = $nav.next('.simcal-events-list-container');
+				var $weekday = $container.find('.simcal-day.simcal-enabled');
+				var $weekdayPrev = $weekday.prev('.simcal-day');
+				if ($weekdayPrev.length > 0) {
+					$nav.find('.events-today').text(thedoughshackGetDayHeaderText($weekdayPrev));
+					$weekday.slideUp().removeClass('simcal-enabled');
+					$weekdayPrev.slideDown().addClass('simcal-enabled');
+					if ($weekdayPrev.prev('.simcal-day').length === 0) {
+						$nav.find('.events-prev').removeClass('simcal-enabled').addClass('simcal-disabled');
 					}
-					$('.events-prev-next .events-today').text(currentDay);
-					weekday.slideUp().removeClass('simcal-enabled').prev('.simcal-day').slideDown().addClass('simcal-enabled');
-					if (weekdayPrev.prev('.simcal-day').length == 0) {
-						$('.events-prev-next .events-prev').removeClass('simcal-enabled').addClass('simcal-disabled');
-					}
-					if (weekday.next('.simcal-day').length == 0) {
-						$('.events-prev-next .events-next').removeClass('simcal-disabled').addClass('simcal-enabled');
+					if ($weekday.next('.simcal-day').length === 0) {
+						$nav.find('.events-next').removeClass('simcal-disabled').addClass('simcal-enabled');
 					}
 				}
 			});
-			
+
 		<?php 
 		}
 		// If is home page, load map scripts
@@ -198,7 +301,6 @@
 			if ($('.show-todays-events .no-events').length > 0 || $('.simcal-events-list-container .simcal-day:first-child').hasClass('simcal-day-empty')) {
 				$(".map-canvas-container").addClass('map-no-events');
 			}
-			thedoughshackSplitTelFromEventTitles();
 			$('.find-us-title h2 + p').append('<small>Click any item to view on the map&hellip;</small>');
 			$('.show-weekly-events').after('<div class="events-show" tabindex="0"><p>Click to view rest of week&hellip;</p></div>');
 			$(".events-show").on( "click", function() {
@@ -213,7 +315,7 @@
 			function thedoughshackSplitTelFromEventTitles($context) {
 				var $targets = ($context && $context.length)
 					? $context.find('.simcal-event-details')
-					: $('.show-todays-events .simcal-event-details, .show-weekly-events .simcal-event-details');
+					: $('.show-todays-events .simcal-event-details, .show-weekly-events .simcal-event-details, #thedoughshack-call-ahead-source .simcal-event-details');
 				$targets.each(function() {
 					var $details = $(this);
 					var $h3 = $details.find('h3').first();
@@ -230,64 +332,109 @@
 						var displayText = $.trim($tel.text()) || href.replace(/^tel:\s*/i, '');
 						$tel.detach();
 						var $sub = $('<p class="simcal-event-phone-sub"></p>').insertAfter($h3);
-						$sub.append($('<a></a>').attr('href', href).text(displayText));
-						return;
+						$sub.text(displayText);
+					} else {
+						var html = $span.html();
+						if (html) {
+							var m = html.match(/(?:<br\s*\/?>|\s|&nbsp;)*tel:\s*([+\d\s\u00a0().\-—]+)/i);
+							if (m) {
+								var rawPhone = m[1].replace(/[\s\u00a0]+/g, ' ').trim();
+								if (rawPhone) {
+									$span.html(html.replace(m[0], ' ').replace(/\s{2,}/g, ' ').trim());
+									var $sub2 = $('<p class="simcal-event-phone-sub"></p>').insertAfter($h3);
+									$sub2.text(rawPhone);
+								}
+							}
+						}
 					}
 
-					var html = $span.html();
-					if (!html) return;
-					var m = html.match(/(?:<br\s*\/?>|\s|&nbsp;)*tel:\s*([+\d\s\u00a0().\-—]+)/i);
-					if (m) {
-						var rawPhone = m[1].replace(/[\s\u00a0]+/g, ' ').trim();
-						if (!rawPhone) return;
-						var digits = rawPhone.replace(/[^\d+]/g, '');
-						var telHref = 'tel:' + (digits || rawPhone.replace(/\s+/g, ''));
-						$span.html(html.replace(m[0], ' ').replace(/\s{2,}/g, ' ').trim());
-						var $sub2 = $('<p class="simcal-event-phone-sub"></p>').insertAfter($h3);
-						$sub2.append($('<a></a>').attr('href', telHref).text(rawPhone));
-					}
+					// Plain text only — row-level simcal-event-call handles dialling; nested tel: links break that.
+					$details.find('a[href]').filter(function() {
+						if ($(this).hasClass('simcal-event-call')) {
+							return false;
+						}
+						return /^tel:/i.test(($(this).attr('href') || '').trim());
+					}).each(function() {
+						var $link = $(this);
+						var linkText = $.trim($link.text()) || ($link.attr('href') || '').replace(/^tel:\s*/i, '');
+						$link.replaceWith(document.createTextNode(linkText));
+					});
 				});
 			}
 
+			function thedoughshackWrapRowsFromPhoneSub($scope) {
+				$scope = $scope || $(document);
+				$scope.find('.simcal-event').each(function() {
+					var $event = $(this);
+					if ($event.children('a.simcal-event-call').length) {
+						return;
+					}
+					var $phone = $event.find('.simcal-event-phone-sub').first();
+					if (!$phone.length) {
+						return;
+					}
+					var rawPhone = $.trim($phone.text());
+					if (rawPhone === '') {
+						return;
+					}
+					var telHref = 'tel:' + rawPhone.replace(/[^\d+]/g, '');
+					if (telHref === 'tel:') {
+						return;
+					}
+					$event.wrapInner('<a href="' + telHref + '" class="simcal-event-call"></a>');
+				});
+			}
+
+			thedoughshackInitCallAheadCalendars();
+
         	var isDraggable = !('ontouchstart' in document.documentElement);
 			if (!isDraggable) {
-				$('.page-intro .section-inner').append('<a href="tel:02034881064" class="call-ahead lightbox">Call ahead</a>');
-				//if ($('.simcal-events-list-container > div:nth-child(1) .simcal-event-van3').length > 0) {
-				//}
-				
-				<?php if (get_field('takeaway_phone', 2)) { ?>
-					$('.find-us-takeaway h3').after('<a href="tel:<?php echo get_field('takeaway_phone', 2); ?>" class="call-ahead"><?php echo get_field('takeaway_phone', 2); ?></a>');
+				<?php if ( is_front_page() || is_page( 6 ) ) { ?>
+				$('.page-intro .section-inner').append('<a href="#" class="call-ahead lightbox">Call ahead</a>');
 				<?php } ?>
-				
-				$('.lightbox').on( 'click', function(e) {
-					var lightboxContent = $('.simcal-calendar').html().replace(/@ /g, "");
-					<?php if (get_field('takeaway_phone', 2)) { ?>
-					lightboxContent += '<ul class="simcal-events"><li class="simcal-event"><a href="tel:<?php echo get_field('takeaway_phone', 2); ?>" class="simcal-event-call"><div class="simcal-event-details"><p><?php echo get_field('takeaway_header', 2); ?></p><h3>Call Now: <?php echo get_field('takeaway_phone', 2); ?><span class="simcal-event-van3"><span class="screen-reader-text">Van 3: </span></span></h3><h4>&nbsp;</h4></div></a></li></ul>';
-					<?php } ?>
-					
-					var lightbox = '<div id="lightbox"><p class="lightbox-close">Close</p><div id="lightbox-content" class="simcal-calendar">'+lightboxContent+'</div></div>';
+
+				<?php if ( get_field( 'takeaway_phone', 2 ) && is_front_page() ) { ?>
+					$('.find-us-takeaway h3').after('<a href="tel:<?php echo esc_js( get_field( 'takeaway_phone', 2 ) ); ?>" class="call-ahead"><?php echo esc_js( get_field( 'takeaway_phone', 2 ) ); ?></a>');
+				<?php } ?>
+
+				function thedoughshackOpenCallAheadLightbox(e) {
+					e.preventDefault();
+					$('#lightbox').remove();
+
+					var $sourceCal = thedoughshackGetCallAheadCalendarEl();
+					if (!$sourceCal.length) {
+						return;
+					}
+
+					var calendarHtml = $('<div/>').append($sourceCal.clone(true, true)).html().replace(/@ /g, '');
+					var takeawayHtml = thedoughshackCallAheadTakeaway || '';
+
+					var lightbox = '<div id="lightbox" class="thedoughshack-call-ahead-lightbox">' +
+						'<p class="lightbox-close">Close</p>' +
+						'<div class="feature-find-us feature-find-us--lightbox">' +
+						'<div class="section-inner">' +
+						'<div class="find-us">' +
+						'<div class="show-weekly-events">' +
+						'<div class="simcal-calendar">' + calendarHtml + '</div>' +
+						'</div></div>' +
+						takeawayHtml +
+						'</div></div></div>';
+
 					$('body').append(lightbox);
-					$("#lightbox .lightbox-close").on("click", function() {
-						$(this).parent().hide();
+					$('#lightbox .lightbox-close').on('click', function() {
+						$(this).closest('#lightbox').remove();
 					});
-<?php
-	if( have_rows('vans') ):
-		while( have_rows('vans') ) : the_row();
-			$van = get_sub_field('van_number');
-			$vanTel = get_sub_field('van_telephone_number');
-			if ($van && $vanTel) { ?>
-				$('#lightbox .simcal-event-van-tel-<?php echo $van; ?>').closest('.simcal-event').wrapInner('<a href="tel:<?php echo $vanTel; ?>" class="simcal-event-call"></a>');
-			<?php }
-		endwhile;
-	endif; 
-?>
 					if (typeof thedoughshackSplitTelFromEventTitles === 'function') {
 						thedoughshackSplitTelFromEventTitles($('#lightbox'));
 					}
-					e.preventDefault();
-				});
-				
-			}		
+					thedoughshackWrapRowsFromPhoneSub($('#lightbox'));
+					if ($('body').hasClass('page-id-6')) {
+						thedoughshackWrapVanTelLinks($('#lightbox'));
+					}
+				}
+
+				$('.call-ahead.lightbox').on('click', thedoughshackOpenCallAheadLightbox);
+			}
 		<?php } ?>  
 		
 		<?php if (is_front_page()) { ?>
