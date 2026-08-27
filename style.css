@@ -2645,6 +2645,101 @@ figure.quote figcaption cite {
 .simcal-calendar ul.simcal-events li.simcal-event .view-on-map-active h4 {
   color: #6F7160;
 }
+.simcal-calendar ul.simcal-events li.simcal-event.simcal-event-out-of-service {
+  background: rgb(229.5, 229.5, 229.5);
+  color: #6F7160;
+}
+.no-touchevents .simcal-calendar ul.simcal-events li.simcal-event.simcal-event-out-of-service:hover, .no-touchevents .simcal-calendar ul.simcal-events li.simcal-event.simcal-event-out-of-service:focus,
+.no-touchevents .simcal-calendar ul.simcal-events li.simcal-event.simcal-event-out-of-service .simcal-event-details:hover,
+.no-touchevents .simcal-calendar ul.simcal-events li.simcal-event.simcal-event-out-of-service .simcal-event-details:focus {
+  background: rgb(229.5, 229.5, 229.5);
+  color: #6F7160;
+  cursor: default;
+}
+.simcal-calendar ul.simcal-events li.simcal-event.simcal-event-out-of-service.view-on-map-active,
+.simcal-calendar ul.simcal-events li.simcal-event.simcal-event-out-of-service .view-on-map-active {
+  background: rgb(229.5, 229.5, 229.5);
+  color: #6F7160;
+}
+.simcal-calendar ul.simcal-events li.simcal-event.simcal-event-out-of-service .simcal-event-details h3,
+.simcal-calendar ul.simcal-events li.simcal-event.simcal-event-out-of-service .simcal-event-details h4,
+.simcal-calendar ul.simcal-events li.simcal-event.simcal-event-out-of-service .simcal-event-details p:first-of-type {
+  opacity: 0.72;
+}
+.simcal-calendar ul.simcal-events li.simcal-event.simcal-event-out-of-service .simcal-event-details .simcal-event-van1,
+.simcal-calendar ul.simcal-events li.simcal-event.simcal-event-out-of-service .simcal-event-details .simcal-event-van2,
+.simcal-calendar ul.simcal-events li.simcal-event.simcal-event-out-of-service .simcal-event-details .simcal-event-van3 {
+  opacity: 0.45;
+}
+.simcal-calendar ul.simcal-events li.simcal-event.simcal-event-out-of-service .simcal-event-details .simcal-event-phone-sub {
+  display: none;
+}
+.simcal-calendar ul.simcal-events li.simcal-event.simcal-event-out-of-service .simcal-event-details--out-of-service .simcal-event-out-of-service-alert {
+  clear: both;
+  float: none;
+}
+.simcal-calendar ul.simcal-events li.simcal-event.simcal-event-out-of-service .simcal-event-out-of-service-alert {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  clear: both;
+  float: none;
+  width: fit-content;
+  max-width: calc(100% - 0.8075em);
+  margin: 0.5em 0.8075em 0.5em 0;
+  padding: 0.6em 1.0575em;
+  background: #e3edca;
+  border: dashed #9DA490;
+  border-width: 1px;
+  border-radius: 1.25em;
+  box-sizing: border-box;
+}
+.simcal-calendar ul.simcal-events li.simcal-event.simcal-event-out-of-service .simcal-event-out-of-service-alert .simcal-event-out-of-service-message {
+  display: inline-block;
+  flex: 0 0 auto;
+  margin: 0;
+  padding: 0.3em 0.9575em;
+  background: rgb(238.8, 214.86, 214.86);
+  color: rgb(157.6, 0, 0);
+  border: 1px solid rgb(223.5, 176.95, 176.95);
+  border-radius: 999px;
+  font-family: "hanken", sans-serif;
+  font-weight: 700;
+  text-transform: none;
+  line-height: 1.2;
+  font-size: 12px;
+  font-size: 0.75rem;
+}
+.simcal-calendar ul.simcal-events li.simcal-event.simcal-event-out-of-service .simcal-event-out-of-service-alert .simcal-event-nearest-van {
+  display: block;
+  flex: 0 0 auto;
+  width: 100%;
+  margin: 0.35em 0 0;
+  padding: 0;
+  background: none;
+  border: 0;
+  border-radius: 0;
+  color: #6F7160;
+  font-family: "hanken", sans-serif;
+  font-weight: 400;
+  text-transform: none;
+  line-height: 1.5;
+  font-size: 13px;
+  font-size: 0.8125rem;
+}
+.simcal-calendar ul.simcal-events li.simcal-event.simcal-event-out-of-service .simcal-event-out-of-service-alert .simcal-event-nearest-van .simcal-event-nearest-van-label {
+  font-weight: 700;
+  color: #45423F;
+}
+.simcal-calendar ul.simcal-events li.simcal-event.simcal-event-out-of-service .simcal-event-out-of-service-alert .simcal-event-nearest-van .simcal-event-nearest-van-link {
+  color: #45423F;
+  font-weight: 400;
+  text-decoration: underline;
+  text-underline-offset: 0.12em;
+}
+.simcal-calendar ul.simcal-events li.simcal-event.simcal-event-out-of-service .simcal-event-out-of-service-alert .simcal-event-nearest-van .simcal-event-nearest-van-link:hover, .simcal-calendar ul.simcal-events li.simcal-event.simcal-event-out-of-service .simcal-event-out-of-service-alert .simcal-event-nearest-van .simcal-event-nearest-van-link:focus {
+  color: #6F7160;
+}
 .simcal-calendar ul.simcal-events li.simcal-event .simcal-event-details {
   padding-left: 13.5em;
   font-size: 12px;
@@ -3474,93 +3569,6 @@ a.pizza-menu-anchor-link:hover, a.pizza-menu-anchor-link:focus {
   clear: both;
 }
 
-.js .page-id-2 .simcal-events-list-container .simcal-day,
-.js .page-id-2 .simcal-events-list-container .simcal-day.simcal-disabled,
-.js .page-id-6 .simcal-events-list-container .simcal-day,
-.js .page-id-6 .simcal-events-list-container .simcal-day.simcal-disabled,
-.js #lightbox .simcal-events-list-container .simcal-day,
-.js #lightbox .simcal-events-list-container .simcal-day.simcal-disabled {
-  display: none;
-}
-.js .page-id-2 .simcal-events-list-container .simcal-day.simcal-enabled,
-.js .page-id-6 .simcal-events-list-container .simcal-day.simcal-enabled,
-.js #lightbox .simcal-events-list-container .simcal-day.simcal-enabled {
-  display: block;
-}
-.js .page-id-2 .events-prev-next,
-.js .page-id-6 .events-prev-next,
-.js #lightbox .events-prev-next {
-  display: table;
-  width: 100%;
-  color: #fff;
-  font-family: "verveine", "hanken", sans-serif;
-  background: rgb(163.146, 188.85, 92.25);
-}
-.js .page-id-2 .events-prev-next span,
-.js .page-id-6 .events-prev-next span,
-.js #lightbox .events-prev-next span {
-  display: table-cell;
-  text-align: center;
-  padding: 0.8075em;
-}
-.js .page-id-2 .events-prev-next .events-prev,
-.js .page-id-2 .events-prev-next .events-next,
-.js .page-id-6 .events-prev-next .events-prev,
-.js .page-id-6 .events-prev-next .events-next,
-.js #lightbox .events-prev-next .events-prev,
-.js #lightbox .events-prev-next .events-next {
-  width: 5em;
-  font-size: 16px;
-  font-size: 1rem;
-}
-@media only screen and (min-width: 48em) {
-  .js .page-id-2 .events-prev-next .events-prev,
-  .js .page-id-2 .events-prev-next .events-next,
-  .js .page-id-6 .events-prev-next .events-prev,
-  .js .page-id-6 .events-prev-next .events-next,
-  .js #lightbox .events-prev-next .events-prev,
-  .js #lightbox .events-prev-next .events-next {
-    font-size: 18px;
-    font-size: 1.125rem;
-  }
-}
-.js .page-id-2 .events-prev-next .events-prev:hover, .js .page-id-2 .events-prev-next .events-prev:focus,
-.js .page-id-2 .events-prev-next .events-next:hover,
-.js .page-id-2 .events-prev-next .events-next:focus,
-.js .page-id-6 .events-prev-next .events-prev:hover,
-.js .page-id-6 .events-prev-next .events-prev:focus,
-.js .page-id-6 .events-prev-next .events-next:hover,
-.js .page-id-6 .events-prev-next .events-next:focus,
-.js #lightbox .events-prev-next .events-prev:hover,
-.js #lightbox .events-prev-next .events-prev:focus,
-.js #lightbox .events-prev-next .events-next:hover,
-.js #lightbox .events-prev-next .events-next:focus {
-  cursor: pointer;
-}
-.js .page-id-2 .events-prev-next .events-today,
-.js .page-id-6 .events-prev-next .events-today,
-.js #lightbox .events-prev-next .events-today {
-  font-size: 21px;
-  font-size: 1.3125rem;
-}
-@media only screen and (min-width: 48em) {
-  .js .page-id-2 .events-prev-next .events-today,
-  .js .page-id-6 .events-prev-next .events-today,
-  .js #lightbox .events-prev-next .events-today {
-    font-size: 24px;
-    font-size: 1.5rem;
-  }
-}
-.js .page-id-2 .events-prev-next .simcal-disabled,
-.js .page-id-6 .events-prev-next .simcal-disabled,
-.js #lightbox .events-prev-next .simcal-disabled {
-  visibility: hidden;
-}
-.js .page-id-2 .events-prev-next .simcal-enabled,
-.js .page-id-6 .events-prev-next .simcal-enabled,
-.js #lightbox .events-prev-next .simcal-enabled {
-  visibility: visible;
-}
 .js .page-id-2 .simcal-event-call,
 .js .page-id-6 .simcal-event-call,
 .js #lightbox .simcal-event-call {
@@ -3595,14 +3603,82 @@ a.pizza-menu-anchor-link:hover, a.pizza-menu-anchor-link:focus {
 .js #lightbox .simcal-day-empty ul.simcal-events li.simcal-event .simcal-event-details h3 {
   padding-top: 0.2em;
 }
+.js .page-id-2 .simcal-events-list-container .simcal-day,
+.js .page-id-2 .simcal-events-list-container .simcal-day.simcal-disabled,
+.js .page-id-6 .simcal-events-list-container .simcal-day,
+.js .page-id-6 .simcal-events-list-container .simcal-day.simcal-disabled {
+  display: none;
+}
+.js .page-id-2 .simcal-events-list-container .simcal-day.simcal-enabled,
+.js .page-id-6 .simcal-events-list-container .simcal-day.simcal-enabled {
+  display: block;
+}
+.js .page-id-2 .events-prev-next,
+.js .page-id-6 .events-prev-next {
+  display: table;
+  width: 100%;
+  color: #fff;
+  font-family: "verveine", "hanken", sans-serif;
+  background: rgb(163.146, 188.85, 92.25);
+}
+.js .page-id-2 .events-prev-next span,
+.js .page-id-6 .events-prev-next span {
+  display: table-cell;
+  text-align: center;
+  padding: 0.8075em;
+}
+.js .page-id-2 .events-prev-next .events-prev,
+.js .page-id-2 .events-prev-next .events-next,
+.js .page-id-6 .events-prev-next .events-prev,
+.js .page-id-6 .events-prev-next .events-next {
+  width: 5em;
+  font-size: 16px;
+  font-size: 1rem;
+}
+@media only screen and (min-width: 48em) {
+  .js .page-id-2 .events-prev-next .events-prev,
+  .js .page-id-2 .events-prev-next .events-next,
+  .js .page-id-6 .events-prev-next .events-prev,
+  .js .page-id-6 .events-prev-next .events-next {
+    font-size: 18px;
+    font-size: 1.125rem;
+  }
+}
+.js .page-id-2 .events-prev-next .events-prev:hover, .js .page-id-2 .events-prev-next .events-prev:focus,
+.js .page-id-2 .events-prev-next .events-next:hover,
+.js .page-id-2 .events-prev-next .events-next:focus,
+.js .page-id-6 .events-prev-next .events-prev:hover,
+.js .page-id-6 .events-prev-next .events-prev:focus,
+.js .page-id-6 .events-prev-next .events-next:hover,
+.js .page-id-6 .events-prev-next .events-next:focus {
+  cursor: pointer;
+}
+.js .page-id-2 .events-prev-next .events-today,
+.js .page-id-6 .events-prev-next .events-today {
+  font-size: 21px;
+  font-size: 1.3125rem;
+}
+@media only screen and (min-width: 48em) {
+  .js .page-id-2 .events-prev-next .events-today,
+  .js .page-id-6 .events-prev-next .events-today {
+    font-size: 24px;
+    font-size: 1.5rem;
+  }
+}
+.js .page-id-2 .events-prev-next .simcal-disabled,
+.js .page-id-6 .events-prev-next .simcal-disabled {
+  visibility: hidden;
+}
+.js .page-id-2 .events-prev-next .simcal-enabled,
+.js .page-id-6 .events-prev-next .simcal-enabled {
+  visibility: visible;
+}
 .js .page-id-2 .simcal-events li,
-.js .page-id-6 .simcal-events li,
-.js #lightbox .simcal-events li {
+.js .page-id-6 .simcal-events li {
   position: relative;
 }
 .js .page-id-2 .simcal-events li > div,
-.js .page-id-6 .simcal-events li > div,
-.js #lightbox .simcal-events li > div {
+.js .page-id-6 .simcal-events li > div {
   padding-right: 65px;
 }
 .js .page-id-2 .simcal-events li .simcal-event-van1,
@@ -3610,10 +3686,7 @@ a.pizza-menu-anchor-link:hover, a.pizza-menu-anchor-link:focus {
 .js .page-id-2 .simcal-events li .simcal-event-van3,
 .js .page-id-6 .simcal-events li .simcal-event-van1,
 .js .page-id-6 .simcal-events li .simcal-event-van2,
-.js .page-id-6 .simcal-events li .simcal-event-van3,
-.js #lightbox .simcal-events li .simcal-event-van1,
-.js #lightbox .simcal-events li .simcal-event-van2,
-.js #lightbox .simcal-events li .simcal-event-van3 {
+.js .page-id-6 .simcal-events li .simcal-event-van3 {
   position: absolute;
   right: 10px;
   top: 50%;
@@ -3626,10 +3699,7 @@ a.pizza-menu-anchor-link:hover, a.pizza-menu-anchor-link:focus {
 .js .page-id-2 .simcal-events li .simcal-event-van3:before,
 .js .page-id-6 .simcal-events li .simcal-event-van1:before,
 .js .page-id-6 .simcal-events li .simcal-event-van2:before,
-.js .page-id-6 .simcal-events li .simcal-event-van3:before,
-.js #lightbox .simcal-events li .simcal-event-van1:before,
-.js #lightbox .simcal-events li .simcal-event-van2:before,
-.js #lightbox .simcal-events li .simcal-event-van3:before {
+.js .page-id-6 .simcal-events li .simcal-event-van3:before {
   content: "";
   width: 68px;
   height: 34px;
@@ -3638,18 +3708,15 @@ a.pizza-menu-anchor-link:hover, a.pizza-menu-anchor-link:focus {
   float: left;
 }
 .js .page-id-2 .simcal-events li .simcal-event-van1:before,
-.js .page-id-6 .simcal-events li .simcal-event-van1:before,
-.js #lightbox .simcal-events li .simcal-event-van1:before {
+.js .page-id-6 .simcal-events li .simcal-event-van1:before {
   background-position: 0 78.05%;
 }
 .js .page-id-2 .simcal-events li .simcal-event-van2:before,
-.js .page-id-6 .simcal-events li .simcal-event-van2:before,
-.js #lightbox .simcal-events li .simcal-event-van2:before {
+.js .page-id-6 .simcal-events li .simcal-event-van2:before {
   background-position: 0 80.5%;
 }
 .js .page-id-2 .simcal-events li .simcal-event-van3:before,
-.js .page-id-6 .simcal-events li .simcal-event-van3:before,
-.js #lightbox .simcal-events li .simcal-event-van3:before {
+.js .page-id-6 .simcal-events li .simcal-event-van3:before {
   background-position: 0 83%;
 }
 
@@ -3947,14 +4014,45 @@ a.pizza-menu-anchor-link:hover, a.pizza-menu-anchor-link:focus {
 #lightbox .simcal-calendar ul.simcal-events li.simcal-event .simcal-event-details h4 {
   display: none;
 }
+#lightbox .simcal-calendar ul.simcal-events li.simcal-event .simcal-event-details .simcal-event-out-of-service-alert {
+  grid-column: 1/-1;
+  margin-top: 0.2em;
+  display: inline-block;
+  max-width: 100%;
+}
 #lightbox .simcal-calendar ul.simcal-events li.simcal-event .simcal-event-van1,
 #lightbox .simcal-calendar ul.simcal-events li.simcal-event .simcal-event-van2,
 #lightbox .simcal-calendar ul.simcal-events li.simcal-event .simcal-event-van3 {
   display: none;
 }
-#lightbox .events-prev-next .events-prev,
-#lightbox .events-prev-next .events-next {
-  display: table-cell;
+#lightbox .simcal-calendar ul.simcal-events li.simcal-event > a.simcal-event-call:active .simcal-event-details,
+#lightbox .simcal-calendar ul.simcal-events li.simcal-event > a.simcal-event-call:focus .simcal-event-details {
+  background: rgb(224.13, 255, 144.75);
+  color: #45423F;
+}
+#lightbox .call-ahead-popup-header {
+  display: block;
+  width: 100%;
+  color: #fff;
+  font-family: "verveine", "hanken", sans-serif;
+  background: rgb(163.146, 188.85, 92.25);
+  text-align: center;
+  padding: 0.8075em;
+  font-size: 21px;
+  font-size: 1.3125rem;
+}
+@media only screen and (min-width: 48em) {
+  #lightbox .call-ahead-popup-header {
+    font-size: 24px;
+    font-size: 1.5rem;
+  }
+}
+#lightbox .events-prev-next {
+  display: none;
+}
+#lightbox .simcal-events-list-container .simcal-day,
+#lightbox .simcal-events-list-container .simcal-day.simcal-disabled {
+  display: block;
 }
 
 .lightbox-close {

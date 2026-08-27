@@ -167,6 +167,126 @@ function thedoughshack_get_vans_acf_post_id() {
 }
 
 /**
+ * Post meta key storing the calendar date (Y-m-d) a van was marked out of service.
+ *
+ * @param string $van_key Normalized van number.
+ * @return string
+ */
+function thedoughshack_get_van_oos_date_meta_key( $van_key ) {
+	return '_thedoughshack_van_oos_date_' . $van_key;
+}
+
+/**
+ * Whether a van marked out of service in ACF applies for today (site timezone).
+ *
+ * @param int    $post_id    Post storing the vans repeater.
+ * @param string $van_key    Normalized van number.
+ * @param bool   $is_checked Raw ACF van_out_of_service value.
+ * @return bool
+ */
+function thedoughshack_is_van_out_of_service_today( $post_id, $van_key, $is_checked ) {
+	if ( ! $is_checked ) {
+		return false;
+	}
+
+	$meta_key    = thedoughshack_get_van_oos_date_meta_key( $van_key );
+	$stored_date = get_post_meta( $post_id, $meta_key, true );
+	$today       = wp_date( 'Y-m-d' );
+
+	if ( ! is_string( $stored_date ) || '' === $stored_date ) {
+		// Checkbox is on but no date yet — stamp today so today works; won't roll to tomorrow.
+		update_post_meta( $post_id, $meta_key, $today );
+		return true;
+	}
+
+	return $stored_date === $today;
+}
+
+/**
+ * Record the out-of-service date when vans are saved (today only; does not roll over).
+ *
+ * @param int $post_id Saved post ID.
+ */
+function thedoughshack_sync_van_oos_dates( $post_id ) {
+	$vans_post_id = thedoughshack_get_vans_acf_post_id();
+	if ( (int) $post_id !== $vans_post_id || ! function_exists( 'have_rows' ) ) {
+		return;
+	}
+
+	$today = wp_date( 'Y-m-d' );
+
+	if ( ! have_rows( 'vans', $post_id ) ) {
+		return;
+	}
+
+	while ( have_rows( 'vans', $post_id ) ) {
+		the_row();
+		$van_number = get_sub_field( 'van_number' );
+		if ( null === $van_number || '' === $van_number ) {
+			continue;
+		}
+
+		$van_key  = (string) (int) $van_number;
+		$meta_key = thedoughshack_get_van_oos_date_meta_key( $van_key );
+
+		if ( get_sub_field( 'van_out_of_service' ) ) {
+			$stored_date = get_post_meta( $post_id, $meta_key, true );
+			if ( ! is_string( $stored_date ) || '' === $stored_date ) {
+				update_post_meta( $post_id, $meta_key, $today );
+			}
+		} else {
+			delete_post_meta( $post_id, $meta_key );
+		}
+	}
+}
+add_action( 'acf/save_post', 'thedoughshack_sync_van_oos_dates', 20 );
+
+/**
+ * Van rows from ACF (number, tel, out-of-service flag, message) keyed by van number.
+ *
+ * @return array<string, array{tel: string, tel_display: string, out_of_service: bool, message: string, nearest_van: string}>
+ */
+function thedoughshack_get_vans_config() {
+	static $config = null;
+	if ( null !== $config ) {
+		return $config;
+	}
+
+	$config  = array();
+	$post_id = thedoughshack_get_vans_acf_post_id();
+
+	if ( ! function_exists( 'have_rows' ) || ! have_rows( 'vans', $post_id ) ) {
+		return $config;
+	}
+
+	while ( have_rows( 'vans', $post_id ) ) {
+		the_row();
+		$van_number = get_sub_field( 'van_number' );
+		if ( null === $van_number || '' === $van_number ) {
+			continue;
+		}
+
+		$van_key     = (string) (int) $van_number;
+		$tel_display = trim( (string) get_sub_field( 'van_telephone_number' ) );
+		$message     = trim( (string) get_sub_field( 'custom_message' ) );
+
+		if ( '' === $message ) {
+			$message = __( 'Van out of service', 'thedoughshack' );
+		}
+
+		$config[ $van_key ] = array(
+			'tel'            => preg_replace( '/\s+/', '', $tel_display ),
+			'tel_display'    => $tel_display,
+			'out_of_service' => thedoughshack_is_van_out_of_service_today( $post_id, $van_key, (bool) get_sub_field( 'van_out_of_service' ) ),
+			'message'        => $message,
+			'nearest_van'    => trim( (string) get_sub_field( 'nearest_van' ) ),
+		);
+	}
+
+	return $config;
+}
+
+/**
  * Takeaway row HTML appended inside the Call ahead lightbox (shared home + pizzas).
  *
  * @return string Markup or empty string.

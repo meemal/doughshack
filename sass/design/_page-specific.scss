@@ -596,6 +596,120 @@
 				}
 			}
 
+			&.simcal-event-out-of-service {
+				background: $color__tone-10;
+				color: $color__tone-60;
+
+				.no-touchevents & {
+					&:hover,
+					&:focus,
+					.simcal-event-details:hover,
+					.simcal-event-details:focus {
+						background: $color__tone-10;
+						color: $color__tone-60;
+						cursor: default;
+					}
+				}
+
+				&.view-on-map-active,
+				.view-on-map-active {
+					background: $color__tone-10;
+					color: $color__tone-60;
+				}
+
+				.simcal-event-details {
+					h3,
+					h4,
+					p:first-of-type {
+						opacity: 0.72;
+					}
+
+					.simcal-event-van1,
+					.simcal-event-van2,
+					.simcal-event-van3 {
+						opacity: 0.45;
+					}
+
+					.simcal-event-phone-sub {
+						display: none;
+					}
+				}
+
+				.simcal-event-details--out-of-service {
+					.simcal-event-out-of-service-alert {
+						clear: both;
+						float: none;
+					}
+				}
+
+				.simcal-event-out-of-service-alert {
+					display: flex;
+					flex-direction: column;
+					align-items: flex-start;
+					clear: both;
+					float: none;
+					width: fit-content;
+					max-width: calc(100% - #{$spacing__small});
+					margin: $spacing__smaller $spacing__small $spacing__smaller 0;
+					padding: ($spacing__smaller + 0.1em) ($spacing__small + 0.25em);
+					background: $color__brand-1-light;
+					border: dashed $color__tone-40;
+					border-width: 1px;
+					border-radius: 1.25em;
+					box-sizing: border-box;
+
+					.simcal-event-out-of-service-message {
+						display: inline-block;
+						flex: 0 0 auto;
+						margin: 0;
+						padding: ($spacing__smallest + 0.1em) ($spacing__small + 0.15em);
+						background: mix($color__brand-2, #fff, 18%);
+						color: $color__brand-2-bright-dark;
+						border: 1px solid mix($color__brand-2, #fff, 35%);
+						border-radius: 999px;
+						font-family: $font__main;
+						font-weight: $font__weight-bold;
+						text-transform: none;
+						line-height: $font__line-height-tight;
+						@include font-size($font__size-smallprint);
+					}
+
+					.simcal-event-nearest-van {
+						display: block;
+						flex: 0 0 auto;
+						width: 100%;
+						margin: ($spacing__smallest + 0.15em) 0 0;
+						padding: 0;
+						background: none;
+						border: 0;
+						border-radius: 0;
+						color: $color__tone-60;
+						font-family: $font__main;
+						font-weight: $font__weight-normal;
+						text-transform: none;
+						line-height: $font__line-height-body;
+						@include font-size(0.8125);
+
+						.simcal-event-nearest-van-label {
+							font-weight: $font__weight-bold;
+							color: $color__text-body;
+						}
+
+						.simcal-event-nearest-van-link {
+							color: $color__text-body;
+							font-weight: $font__weight-normal;
+							text-decoration: underline;
+							text-underline-offset: 0.12em;
+
+							&:hover,
+							&:focus {
+								color: $color__tone-60;
+							}
+						}
+					}
+				}
+			}
+
 			$var__time-width: 13.5em;
 			.simcal-event-details {
 				padding-left: $var__time-width;

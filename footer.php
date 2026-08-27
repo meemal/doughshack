@@ -107,6 +107,265 @@
 			<?php $thedoughshack_vans_post_id = function_exists( 'thedoughshack_get_vans_acf_post_id' ) ? thedoughshack_get_vans_acf_post_id() : 2; ?>
 
 			var thedoughshackWeekDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+			var thedoughshackVanConfig = <?php echo wp_json_encode( function_exists( 'thedoughshack_get_vans_config' ) ? thedoughshack_get_vans_config() : array() ); ?>;
+			var isDraggable = !('ontouchstart' in document.documentElement);
+
+			function thedoughshackIsMapNearestVanMode() {
+				return isDraggable && typeof ShackMap !== 'undefined' && ShackMap.loadMarker;
+			}
+
+			function thedoughshackGetVanNumberFromEvent($event) {
+				var $vanIcon = $event.find('[class*="simcal-event-van-tel-"]').first();
+				if (!$vanIcon.length) {
+					return '';
+				}
+				var match = ($vanIcon.attr('class') || '').match(/simcal-event-van-tel-(\d+)/);
+				return match ? match[1] : '';
+			}
+
+			function thedoughshackEventIsTodayContext($event) {
+				if ($event.closest('#lightbox, .thedoughshack-call-ahead-lightbox').length) {
+					return true;
+				}
+
+				var $day = $event.closest('.simcal-day');
+				var $listContainer = $event.closest('.simcal-events-list-container');
+
+				// Week view (Prev/Next): only the stamped calendar-today row counts — not Fri when browsing ahead.
+				if ($listContainer.length && $listContainer.data('thedoughshackWeekNav')) {
+					if (!$day.length || !$day.hasClass('simcal-enabled')) {
+						return false;
+					}
+					return $day.attr('data-thedoughshack-calendar-today') === '1';
+				}
+
+				// Today-only SimCal feed (no week navigation on this list).
+				if ($event.closest('.show-todays-events').length) {
+					return true;
+				}
+
+				if ($event.closest('#thedoughshack-call-ahead-source').length) {
+					return true;
+				}
+
+				if ($day.length && $day.hasClass('simcal-enabled') && $day.attr('data-thedoughshack-calendar-today') === '1') {
+					return true;
+				}
+
+				return false;
+			}
+
+			function thedoughshackUnwrapEventCall($event) {
+				var $link = $event.children('a.simcal-event-call').first();
+				if (!$link.length) {
+					return;
+				}
+				if (!$link.data('thedoughshackTelHref')) {
+					$link.data('thedoughshackTelHref', ($link.attr('href') || '').trim());
+				}
+				$link.replaceWith($link.contents());
+			}
+
+			function thedoughshackRestoreEventCall($event, vanConfig) {
+				if ($event.children('a.simcal-event-call').length) {
+					return;
+				}
+				var telHref = vanConfig.tel ? 'tel:' + vanConfig.tel : '';
+				var $phoneSub = $event.find('.simcal-event-phone-sub').first();
+				if ($phoneSub.length) {
+					var fromPhone = 'tel:' + $.trim($phoneSub.text()).replace(/[^\d+]/g, '');
+					if (fromPhone !== 'tel:') {
+						telHref = fromPhone;
+					}
+				}
+				if (telHref && telHref !== 'tel:') {
+					$event.wrapInner('<a href="' + telHref + '" class="simcal-event-call"></a>');
+				}
+			}
+
+			function thedoughshackNormalizeLocationMatchText(text) {
+				return $.trim(String(text || '')).toLowerCase().replace(/\s+/g, ' ');
+			}
+
+			function thedoughshackEventTitleText($event) {
+				var $h3 = $event.find('.simcal-event-details h3').first().clone();
+				$h3.find('[class*="simcal-event-van"]').remove();
+				return $.trim($h3.text()).replace(/\s+/g, ' ');
+			}
+
+			function thedoughshackPartialTitleMatch(needle, haystack) {
+				needle = thedoughshackNormalizeLocationMatchText(needle);
+				haystack = thedoughshackNormalizeLocationMatchText(haystack);
+				if (needle === '' || haystack === '') {
+					return false;
+				}
+				return haystack.indexOf(needle) !== -1 || needle.indexOf(haystack) !== -1;
+			}
+
+			function thedoughshackGetTodayEventsScope($fromEvent) {
+				var $roots = $fromEvent.closest('#lightbox, .thedoughshack-call-ahead-lightbox, .show-todays-events, .simcal-calendar, #thedoughshack-call-ahead-source');
+				if (!$roots.length) {
+					$roots = $(document);
+				}
+				return $roots.first().find('.simcal-event').filter(function() {
+					return thedoughshackEventIsTodayContext($(this));
+				});
+			}
+
+			function thedoughshackFindMatchingTodayEvent(nearestVanText, $currentEvent) {
+				var match = null;
+				thedoughshackGetTodayEventsScope($currentEvent).each(function() {
+					var $candidate = $(this);
+					if ($candidate.is($currentEvent) || $candidate.hasClass('simcal-event-out-of-service')) {
+						return;
+					}
+					if (thedoughshackPartialTitleMatch(nearestVanText, thedoughshackEventTitleText($candidate))) {
+						match = $candidate;
+						return false;
+					}
+				});
+				return match;
+			}
+
+			function thedoughshackGetEventTelHref($event) {
+				var $call = $event.children('a.simcal-event-call').first();
+				if ($call.length) {
+					var href = ($call.attr('href') || '').trim();
+					if (/^tel:/i.test(href)) {
+						return href;
+					}
+				}
+				var $phone = $event.find('.simcal-event-phone-sub').first();
+				if ($phone.length) {
+					var rawPhone = $.trim($phone.text());
+					if (rawPhone !== '') {
+						var telHref = 'tel:' + rawPhone.replace(/[^\d+]/g, '');
+						if (telHref !== 'tel:') {
+							return telHref;
+						}
+					}
+				}
+				var vanNum = thedoughshackGetVanNumberFromEvent($event);
+				if (vanNum && thedoughshackVanConfig[vanNum] && thedoughshackVanConfig[vanNum].tel) {
+					return 'tel:' + thedoughshackVanConfig[vanNum].tel;
+				}
+				return '';
+			}
+
+			function thedoughshackUpdateNearestVanLine($alert, nearestVan, $currentEvent) {
+				var text = $.trim(nearestVan || '');
+				var $nearest = $alert.find('.simcal-event-nearest-van').first();
+				if (text === '') {
+					$nearest.remove();
+					return;
+				}
+				if (!$nearest.length) {
+					$nearest = $('<p class="simcal-event-nearest-van"><span class="simcal-event-nearest-van-label">Nearest van:</span> </p>');
+					$alert.append($nearest);
+				}
+				$nearest.find('.simcal-event-nearest-van-text, .simcal-event-nearest-van-link').remove();
+
+				var $matched = $currentEvent && $currentEvent.length
+					? thedoughshackFindMatchingTodayEvent(text, $currentEvent)
+					: null;
+				var telHref = $matched ? thedoughshackGetEventTelHref($matched) : '';
+
+				if ($matched) {
+					var $matchedDetails = $matched.find('.simcal-event-details').first();
+					var $link = $('<a class="simcal-event-nearest-van-link"></a>').text(text);
+
+					if (telHref && !thedoughshackIsMapNearestVanMode()) {
+						$link.attr('href', telHref).addClass('simcal-event-call');
+					} else {
+						$link.attr('href', '#').addClass('simcal-event-nearest-van-link--map');
+					}
+
+					$link.on('click', function(e) {
+						if (thedoughshackIsMapNearestVanMode() && $matchedDetails.length) {
+							e.preventDefault();
+							if (typeof thedoughshackOpenMapForEventDetails === 'function') {
+								thedoughshackOpenMapForEventDetails($matchedDetails);
+							}
+							return false;
+						}
+						if (!telHref) {
+							e.preventDefault();
+						}
+					});
+
+					$nearest.append($link);
+				} else {
+					$nearest.append($('<span class="simcal-event-nearest-van-text"></span>').text(text));
+				}
+			}
+
+			function thedoughshackBuildOutOfServiceAlert(vanConfig, $currentEvent) {
+				var $alert = $('<div class="simcal-event-out-of-service-alert" role="status"></div>');
+				$alert.append($('<span class="simcal-event-out-of-service-message"></span>').text(vanConfig.message));
+				thedoughshackUpdateNearestVanLine($alert, vanConfig.nearest_van, $currentEvent);
+				return $alert;
+			}
+
+			function thedoughshackEnsureOutOfServiceAlert($details, vanConfig) {
+				var $currentEvent = $details.closest('.simcal-event');
+				$details.find('.simcal-event-out-of-service-alert, .simcal-event-out-of-service-message, .simcal-event-nearest-van').remove();
+
+				var $alert = thedoughshackBuildOutOfServiceAlert(vanConfig, $currentEvent);
+				if ($details.find('h4').length) {
+					$details.find('h4').first().before($alert);
+				} else {
+					$details.find('h3').first().after($alert);
+				}
+				return $alert;
+			}
+
+			function thedoughshackSyncVanOutOfService($scope) {
+				$scope = $scope || $(document);
+
+				$scope.find('.simcal-event').each(function() {
+					var $event = $(this);
+					var vanNum = thedoughshackGetVanNumberFromEvent($event);
+					if (!vanNum || !thedoughshackVanConfig[vanNum]) {
+						return;
+					}
+
+					var vanConfig = thedoughshackVanConfig[vanNum];
+					var shouldDisable = vanConfig.out_of_service && thedoughshackEventIsTodayContext($event);
+					var $details = $event.find('.simcal-event-details').first();
+
+					if (shouldDisable) {
+						thedoughshackUnwrapEventCall($event);
+						$event.addClass('simcal-event-out-of-service');
+						$details.addClass('simcal-event-details--out-of-service');
+						$details.removeClass('view-on-map-active');
+
+						var $phoneSub = $details.find('.simcal-event-phone-sub').first();
+						if ($phoneSub.length) {
+							$phoneSub.hide();
+						}
+
+						thedoughshackEnsureOutOfServiceAlert($details, vanConfig);
+						return;
+					}
+
+					$event.removeClass('simcal-event-out-of-service');
+					$details.removeClass('simcal-event-details--out-of-service');
+					$details.find('.simcal-event-out-of-service-alert').remove();
+					$details.find('.simcal-event-out-of-service-message').filter(function() {
+						return !$(this).closest('.simcal-event-out-of-service-alert').length;
+					}).remove();
+
+					var $phoneSub = $details.find('.simcal-event-phone-sub').first();
+					if ($phoneSub.length) {
+						$phoneSub.show();
+					} else if (vanConfig.tel_display || vanConfig.tel) {
+						$phoneSub = $('<p class="simcal-event-phone-sub"></p>').text(vanConfig.tel_display || vanConfig.tel);
+						$details.find('h3').first().after($phoneSub);
+					}
+
+					thedoughshackRestoreEventCall($event, vanConfig);
+				});
+			}
 
 			function thedoughshackApplyVanIcons($scope) {
 				$scope = $scope || $(document);
@@ -147,6 +406,63 @@
 				});
 			}
 
+			function thedoughshackStoreCallAheadWeekHtml($scope) {
+				$scope = $scope || $('#thedoughshack-call-ahead-source');
+				$scope.find('.simcal-events-list-container').each(function() {
+					var $container = $(this);
+					if ($container.data('thedoughshackWeekHtml')) {
+						return;
+					}
+					var html = $container.html();
+					if (html && $.trim(html) !== '') {
+						$container.data('thedoughshackWeekHtml', html);
+					}
+				});
+			}
+
+			function thedoughshackBuildCallAheadTodayBlock(weekHtml) {
+				var todayNum = new Date().getDay();
+				var $scratch = $('<div class="simcal-events-list-container"/>').html(weekHtml);
+				var $day = $scratch.find('.simcal-weekday-' + todayNum).first();
+				if (!$day.length) {
+					return {
+						header: thedoughshackWeekDays[todayNum],
+						dayHtml: '<div class="simcal-weekday-' + todayNum + ' simcal-day simcal-day-empty simcal-enabled" data-thedoughshack-calendar-today="1"><ul class="simcal-events"><li class="simcal-event"><div class="simcal-event-details"><p><span class="simcal-event-start simcal-event-start-date">' + thedoughshackWeekDays[todayNum] + '</span></p><h3>No party today.</h3><h4>Please try another day.</h4></div></li></ul></div>'
+					};
+				}
+				var $dayClone = $($day.get(0).outerHTML);
+				$dayClone.addClass('simcal-enabled').removeClass('simcal-disabled').attr('data-thedoughshack-calendar-today', '1');
+				return {
+					header: thedoughshackGetDayHeaderText($dayClone),
+					dayHtml: $dayClone.get(0).outerHTML
+				};
+			}
+
+			function thedoughshackInitCallAheadSourceTodayOnly($scope) {
+				$scope = $scope || $(document);
+				var todayNum = new Date().getDay();
+				var j = todayNum;
+
+				$scope.find('.simcal-events-list-container').each(function() {
+					var $container = $(this);
+					if ($container.data('thedoughshackTodayOnly')) {
+						return;
+					}
+					$container.data('thedoughshackTodayOnly', true);
+					$container.prev('.events-prev-next').remove();
+
+					var $weekday = $container.find('.simcal-weekday-' + j).first();
+					var output;
+					if ($weekday.length < 1) {
+						output = '<div class="simcal-weekday-' + j + ' simcal-day simcal-day-empty simcal-enabled" data-thedoughshack-calendar-today="1"><ul class="simcal-events"><li class="simcal-event"><div class="simcal-event-details"><p><span class="simcal-event-start simcal-event-start-date">' + thedoughshackWeekDays[j] + '</span></p><h3>No party today.</h3><h4>Please try another day.</h4></div></li></ul></div>';
+					} else {
+						output = $weekday.get(0).outerHTML;
+					}
+					$container.html(output);
+					$container.find('.simcal-day').attr('data-thedoughshack-calendar-today', '1');
+				});
+			}
+
 			function thedoughshackInitCalendarWeekNav($scope) {
 				$scope = $scope || $(document);
 				var todayNum = new Date().getDay();
@@ -179,7 +495,7 @@
 					$nav.find('.events-today').text(thedoughshackGetDayHeaderText($container.find('.simcal-day:first-child')));
 					$container.find('.simcal-day').addClass('simcal-disabled');
 					$nav.find('.events-prev').addClass('simcal-disabled');
-					$container.find('.simcal-day:first-child').removeClass('simcal-disabled').addClass('simcal-enabled');
+					$container.find('.simcal-day:first-child').removeClass('simcal-disabled').addClass('simcal-enabled').attr('data-thedoughshack-calendar-today', '1');
 				});
 			}
 
@@ -209,37 +525,30 @@
 			}
 
 			function thedoughshackInitCallAheadCalendars() {
-				var $scopes = $('#thedoughshack-call-ahead-source, .feature-find-us');
-				thedoughshackApplyVanIcons($scopes);
-				thedoughshackInitCalendarWeekNav($scopes);
+				var $source = $('#thedoughshack-call-ahead-source');
+				thedoughshackStoreCallAheadWeekHtml($source);
+				thedoughshackApplyVanIcons($source);
+				thedoughshackInitCallAheadSourceTodayOnly($source);
 				if (typeof thedoughshackSplitTelFromEventTitles === 'function') {
-					thedoughshackSplitTelFromEventTitles($('#thedoughshack-call-ahead-source'));
-					thedoughshackSplitTelFromEventTitles($('.feature-find-us'));
+					thedoughshackSplitTelFromEventTitles($source);
 				}
 				<?php if ( is_page( 6 ) ) { ?>
-				thedoughshackWrapVanTelLinks($('#thedoughshack-call-ahead-source'));
-				thedoughshackWrapVanTelLinks($('.page-id-6 .simcal-calendar'));
+				thedoughshackWrapVanTelLinks($source);
 				<?php } ?>
-			}
+				thedoughshackSyncVanOutOfService($source);
 
-			function thedoughshackGetCallAheadCalendarEl() {
-				var $candidates = $(
-					'#thedoughshack-call-ahead-source .simcal-calendar, ' +
-					'.feature-find-us .show-weekly-events .simcal-calendar, ' +
-					'.feature-find-us .simcal-calendar, ' +
-					'.show-weekly-events .simcal-calendar'
-				);
-				var $selected = $();
-
-				$candidates.each(function() {
-					var $cal = $(this);
-					if ($selected.length) return;
-					if ($.trim($cal.text()) === '') return;
-					if ($cal.find('.simcal-events-list-container').length < 1) return;
-					$selected = $cal;
-				});
-
-				return $selected;
+				var $calendars = $('.feature-find-us, .page-id-6 .simcal-calendar');
+				if ($calendars.length) {
+					thedoughshackApplyVanIcons($calendars);
+					thedoughshackInitCalendarWeekNav($calendars);
+					if (typeof thedoughshackSplitTelFromEventTitles === 'function') {
+						thedoughshackSplitTelFromEventTitles($calendars);
+					}
+					<?php if ( is_page( 6 ) ) { ?>
+					thedoughshackWrapVanTelLinks($('.page-id-6 .simcal-calendar'));
+					<?php } ?>
+					thedoughshackSyncVanOutOfService($calendars);
+				}
 			}
 
 			function thedoughshackGetDayHeaderText($day) {
@@ -267,6 +576,7 @@
 					if ($weekday.prev('.simcal-day').length === 0) {
 						$nav.find('.events-prev').removeClass('simcal-disabled').addClass('simcal-enabled');
 					}
+					thedoughshackSyncVanOutOfService($container);
 				}
 			});
 
@@ -285,6 +595,7 @@
 					if ($weekday.next('.simcal-day').length === 0) {
 						$nav.find('.events-next').removeClass('simcal-disabled').addClass('simcal-enabled');
 					}
+					thedoughshackSyncVanOutOfService($container);
 				}
 			});
 
@@ -306,6 +617,9 @@
 			$(".events-show").on( "click", function() {
 				$(".show-weekly-events").slideToggle(500, function() {
 					$(".events-show").html($(this).is(':visible') ? "[x] Close" : "<p>Click to view rest of week&hellip;</p>");
+					if ($(this).is(':visible')) {
+						thedoughshackSyncVanOutOfService($('.show-weekly-events'));
+					}
 				});
 			});
 		
@@ -387,7 +701,6 @@
 
 			thedoughshackInitCallAheadCalendars();
 
-        	var isDraggable = !('ontouchstart' in document.documentElement);
 			if (!isDraggable) {
 				<?php if ( is_front_page() || is_page( 6 ) ) { ?>
 				$('.page-intro .section-inner').append('<a href="#" class="call-ahead lightbox">Call ahead</a>');
@@ -401,12 +714,21 @@
 					e.preventDefault();
 					$('#lightbox').remove();
 
-					var $sourceCal = thedoughshackGetCallAheadCalendarEl();
-					if (!$sourceCal.length) {
+					var $source = $('#thedoughshack-call-ahead-source');
+					var $container = $source.find('.simcal-events-list-container').first();
+					if (!$container.length) {
 						return;
 					}
 
-					var calendarHtml = $('<div/>').append($sourceCal.clone(true, true)).html().replace(/@ /g, '');
+					if (!$container.data('thedoughshackWeekHtml')) {
+						thedoughshackStoreCallAheadWeekHtml($source);
+					}
+					var weekHtml = $container.data('thedoughshackWeekHtml');
+					if (!weekHtml || $.trim(weekHtml) === '') {
+						return;
+					}
+
+					var todayBlock = thedoughshackBuildCallAheadTodayBlock(weekHtml);
 					var takeawayHtml = thedoughshackCallAheadTakeaway || '';
 
 					var lightbox = '<div id="lightbox" class="thedoughshack-call-ahead-lightbox">' +
@@ -415,7 +737,8 @@
 						'<div class="section-inner">' +
 						'<div class="find-us">' +
 						'<div class="show-weekly-events">' +
-						'<div class="simcal-calendar">' + calendarHtml + '</div>' +
+						'<div class="call-ahead-popup-header"><span class="call-ahead-popup-date">' + todayBlock.header + '</span></div>' +
+						'<div class="simcal-calendar"><div class="simcal-events-list-container">' + todayBlock.dayHtml + '</div></div>' +
 						'</div></div>' +
 						takeawayHtml +
 						'</div></div></div>';
@@ -424,6 +747,8 @@
 					$('#lightbox .lightbox-close').on('click', function() {
 						$(this).closest('#lightbox').remove();
 					});
+					$('#lightbox .view-on-map-active').removeClass('view-on-map-active');
+					thedoughshackApplyVanIcons($('#lightbox'));
 					if (typeof thedoughshackSplitTelFromEventTitles === 'function') {
 						thedoughshackSplitTelFromEventTitles($('#lightbox'));
 					}
@@ -431,6 +756,7 @@
 					if ($('body').hasClass('page-id-6')) {
 						thedoughshackWrapVanTelLinks($('#lightbox'));
 					}
+					thedoughshackSyncVanOutOfService($('#lightbox'));
 				}
 
 				$('.call-ahead.lightbox').on('click', thedoughshackOpenCallAheadLightbox);
@@ -438,6 +764,20 @@
 		<?php } ?>  
 		
 		<?php if (is_front_page()) { ?>
+			function thedoughshackOpenMapForEventDetails($details) {
+				if (!$details || !$details.length || typeof ShackMap === 'undefined' || !ShackMap.loadMarker) {
+					return;
+				}
+				$('.map-canvas-closed').removeClass('map-canvas-closed').addClass('map-canvas-open').slideDown();
+				ShackMap.loadMarker($details);
+				$('html, body').animate({
+					scrollTop: $('.find-us-title h2').offset().top
+				}, 500);
+				if ($('.map-canvas-container').height() === 0) {
+					$('.map-canvas-container').removeClass('map-no-events').removeClass('map-canvas-closed');
+				}
+			}
+
 			// Map Init
 			var ShackMap = {
 			    // HTML Nodes
@@ -535,17 +875,13 @@
 				ShackMap.map.setCenter(center);
 			});
 			
-			$(".find-us").on( "click", ".simcal-day:not(.simcal-day-empty) .simcal-event-details", function(e) {
-				
-				$('.map-canvas-closed').removeClass('map-canvas-closed').addClass('map-canvas-open').slideDown();
-				ShackMap.loadMarker($(this));
-				$('html, body').animate({
-				    scrollTop: $(".find-us-title h2").offset().top
-				}, 500);
-				if ($(".map-canvas-container").height() == '0') {
-					//$(".map-canvas-container").height(mapHeight);
-					$(".map-canvas-container").removeClass('map-no-events').removeClass('map-canvas-closed');
+			$(".find-us").on( "click", ".simcal-day:not(.simcal-day-empty) .simcal-event-details, .show-todays-events .simcal-event-details", function(e) {
+				if ($(this).closest('.simcal-event-out-of-service').length) {
+					e.preventDefault();
+					return;
 				}
+
+				thedoughshackOpenMapForEventDetails($(this));
 			});
 			
 		<?php } ?>

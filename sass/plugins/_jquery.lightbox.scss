@@ -81,6 +81,13 @@
 			h4 {
 				display: none;
 			}
+
+			.simcal-event-out-of-service-alert {
+				grid-column: 1 / -1;
+				margin-top: $spacing__smallest;
+				display: inline-block;
+				max-width: 100%;
+			}
 		}
 
 		.simcal-event-van1,
@@ -88,13 +95,36 @@
 		.simcal-event-van3 {
 			display: none;
 		}
+
+		> a.simcal-event-call:active .simcal-event-details,
+		> a.simcal-event-call:focus .simcal-event-details {
+			background: $color__brand-1-bright-light;
+			color: $color__text-body;
+		}
 	}
 
-	// Keep nav cell widths so date heading remains perfectly centered.
+	.call-ahead-popup-header {
+		display: block;
+		width: 100%;
+		color: #fff;
+		font-family: $font__headings;
+		background: $color__brand-1-bright-dark;
+		text-align: center;
+		padding: $spacing__small;
+		@include font-size($font__size-h5);
+		@include bp-nav-switch() {
+			@include font-size($font__size-h4);
+		}
+	}
+
 	.events-prev-next {
-		.events-prev,
-		.events-next {
-			display: table-cell;
+		display: none;
+	}
+
+	.simcal-events-list-container {
+		.simcal-day,
+		.simcal-day.simcal-disabled {
+			display: block;
 		}
 	}
 }

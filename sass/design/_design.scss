@@ -76,6 +76,36 @@ a.pizza-menu-anchor-link {
 	.page-id-2,
 	.page-id-6,
 	#lightbox {
+		.simcal-event-call {
+			display: block;
+			color: inherit;  
+			&:hover,
+			&:focus {
+			 	color: inherit;   
+			}
+		}
+
+		.simcal-day-empty {
+			ul.simcal-events li.simcal-event {
+				.simcal-event-details {
+					text-align: center;
+					padding: $spacing__small;
+					.simcal-event-start-date {
+						display: none;
+					}
+					p:first-of-type {
+						display: none
+					}
+					h3 {
+						padding-top: $spacing__smallest;
+					}
+				}
+			}
+		}
+	}
+
+	.page-id-2,
+	.page-id-6 {
 		.simcal-events-list-container {
 			.simcal-day,
 			.simcal-day.simcal-disabled {
@@ -123,33 +153,6 @@ a.pizza-menu-anchor-link {
 			}
 			.simcal-enabled {
 				visibility: visible;
-			}
-		}
-		
-		.simcal-event-call {
-			display: block;
-			color: inherit;  
-			&:hover,
-			&:focus {
-			 	color: inherit;   
-			}
-		}
-
-		.simcal-day-empty {
-			ul.simcal-events li.simcal-event {
-				.simcal-event-details {
-					text-align: center;
-					padding: $spacing__small;
-					.simcal-event-start-date {
-						display: none;
-					}
-					p:first-of-type {
-						display: none
-					}
-					h3 {
-						padding-top: $spacing__smallest;
-					}
-				}
 			}
 		}
 		
