@@ -28,6 +28,7 @@ const FILE_EXCLUDE = new Set(['.DS_Store', 'error_log', 'Thumbs.db']);
 function skipFile(base) {
 	if (FILE_EXCLUDE.has(base)) return true;
 	if (base.endsWith('.css.map')) return true;
+	if (base.endsWith('.zip')) return true;
 	return false;
 }
 

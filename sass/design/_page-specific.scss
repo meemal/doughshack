@@ -619,9 +619,12 @@
 
 				.simcal-event-details {
 					h3,
-					h4,
 					p:first-of-type {
 						opacity: 0.72;
+					}
+
+					h4 {
+						display: none;
 					}
 
 					.simcal-event-van1,

@@ -2662,9 +2662,11 @@ figure.quote figcaption cite {
   color: #6F7160;
 }
 .simcal-calendar ul.simcal-events li.simcal-event.simcal-event-out-of-service .simcal-event-details h3,
-.simcal-calendar ul.simcal-events li.simcal-event.simcal-event-out-of-service .simcal-event-details h4,
 .simcal-calendar ul.simcal-events li.simcal-event.simcal-event-out-of-service .simcal-event-details p:first-of-type {
   opacity: 0.72;
+}
+.simcal-calendar ul.simcal-events li.simcal-event.simcal-event-out-of-service .simcal-event-details h4 {
+  display: none;
 }
 .simcal-calendar ul.simcal-events li.simcal-event.simcal-event-out-of-service .simcal-event-details .simcal-event-van1,
 .simcal-calendar ul.simcal-events li.simcal-event.simcal-event-out-of-service .simcal-event-details .simcal-event-van2,

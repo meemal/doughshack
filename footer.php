@@ -111,7 +111,7 @@
 			var isDraggable = !('ontouchstart' in document.documentElement);
 
 			function thedoughshackIsMapNearestVanMode() {
-				return isDraggable && typeof ShackMap !== 'undefined' && ShackMap.loadMarker;
+				return typeof ShackMap !== 'undefined' && ShackMap.loadMarker;
 			}
 
 			function thedoughshackGetVanNumberFromEvent($event) {
@@ -768,6 +768,7 @@
 				if (!$details || !$details.length || typeof ShackMap === 'undefined' || !ShackMap.loadMarker) {
 					return;
 				}
+				$('#lightbox.thedoughshack-call-ahead-lightbox').remove();
 				$('.map-canvas-closed').removeClass('map-canvas-closed').addClass('map-canvas-open').slideDown();
 				ShackMap.loadMarker($details);
 				$('html, body').animate({
