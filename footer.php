@@ -788,6 +788,9 @@
 			    map: null,
 			    marker: null,
 			    init: function() {
+			        if (!ShackMap.mapContainer) {
+			            return;
+			        }
 			        var latLng = new google.maps.LatLng(51.507351, -0.127758);
 			        ShackMap.map = new google.maps.Map(ShackMap.mapContainer, {
 			            zoom: 17,
@@ -854,6 +857,9 @@
 			    },
 			    
 			    loadMarker: function(item) {
+					if (!ShackMap.mapContainer || !item || !item.length) {
+						return;
+					}
 					$('.simcal-event-details').removeClass("view-on-map-active");
 					item.addClass('view-on-map-active');
 					var event = item.find('h3 > span');
@@ -869,12 +875,17 @@
 			};
 			
 			// Onload handler to fire off the app.
-			google.maps.event.addDomListener(window, 'load', ShackMap.init);
-			google.maps.event.addDomListener(window, "resize", function() {
-				var center = ShackMap.map.getCenter();
-				google.maps.event.trigger(ShackMap.map, "resize");
-				ShackMap.map.setCenter(center);
-			});
+			if (ShackMap.mapContainer) {
+				google.maps.event.addDomListener(window, 'load', ShackMap.init);
+				google.maps.event.addDomListener(window, "resize", function() {
+					if (!ShackMap.map) {
+						return;
+					}
+					var center = ShackMap.map.getCenter();
+					google.maps.event.trigger(ShackMap.map, "resize");
+					ShackMap.map.setCenter(center);
+				});
+			}
 			
 			$(".find-us").on( "click", ".simcal-day:not(.simcal-day-empty) .simcal-event-details, .show-todays-events .simcal-event-details", function(e) {
 				if ($(this).closest('.simcal-event-out-of-service').length) {
